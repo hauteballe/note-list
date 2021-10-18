@@ -1,5 +1,6 @@
 import React from "react";
 import { Typography } from "@mui/material";
+import PropTypes from 'prop-types';
 
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -60,5 +61,9 @@ function SelectedNote({ note }) {
     );
   }
 }
+
+SelectedNote.propTypes = {
+  note: PropTypes.object,
+};
 
 export default SelectedNote;

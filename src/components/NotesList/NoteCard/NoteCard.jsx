@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
@@ -22,5 +23,11 @@ function NoteCard({ note, onClick }) {
     </Card>
   );
 }
+
+NoteCard.propTypes = {
+  note: PropTypes.object.isRequired,
+  onClick: PropTypes.func,
+};
+
 
 export default NoteCard;
