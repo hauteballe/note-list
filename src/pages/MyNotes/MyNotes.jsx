@@ -1,21 +1,22 @@
-import React from "react";
 import { useState } from "react";
-
-import Header from "../../components/Header/Header";
-import Box from "@mui/material/Box";
 import { Grid } from "@mui/material";
+
+import { NOTES } from "config/constants";
+
+import { StyledBox } from "./styled";
+import Header from "../../components/Header/Header";
 import SelectedNote from "../../components/SelectedNote/SelectedNote";
 import NotesList from "../../components/NotesList/NotesList";
-import { NOTES } from "../../config/constants";
 
-function MyNotes() {
+const MyNotes = () => {
   const [selectedNote, setSelectedNote] = useState(null);
 
   const onNoteSelecting = (note) => () => {
     setSelectedNote(note);
   };
+
   return (
-    <Box sx={{ bgcolor: "grey.800", color: "info.main" }}>
+    <StyledBox>
       <Header />
       <Grid container spacing={2} columns={16}>
         <Grid item xs={3}>
@@ -25,8 +26,8 @@ function MyNotes() {
           <SelectedNote note={selectedNote} />
         </Grid>
       </Grid>
-    </Box>
+    </StyledBox>
   );
-}
+};
 
 export default MyNotes;

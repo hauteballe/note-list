@@ -1,33 +1,31 @@
-import PropTypes from 'prop-types';
-import Card from "@mui/material/Card";
+import PropTypes from "prop-types";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
 
-function NoteCard({ note, onClick }) {
+import shortify from "utils";
+
+import { NotesCard, NotesCardTitle, NotesCardDate } from "./styled";
+
+const NoteCard = ({ note, onClick }) => {
   return (
-    <Card sx={{ minWidth: 275, mt: "1rem", ml: "1rem" }}>
+    <NotesCard>
       <CardActionArea onClick={onClick}>
         <CardContent>
-          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-            {note.title}
-          </Typography>
+          <NotesCardTitle gutterBottom>{note.title}</NotesCardTitle>
           <Typography variant="h5" component="div">
-            {note.description.slice(0, 20)}...
+            {shortify(note.description)}...
           </Typography>
-          <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            {note.date}
-          </Typography>
+          <NotesCardDate>{note.date}</NotesCardDate>
         </CardContent>
       </CardActionArea>
-    </Card>
+    </NotesCard>
   );
-}
+};
 
 NoteCard.propTypes = {
   note: PropTypes.object.isRequired,
   onClick: PropTypes.func,
 };
-
 
 export default NoteCard;

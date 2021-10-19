@@ -1,8 +1,6 @@
-import React from "react";
-import MyNotes from "./pages/MyNotes/MyNotes";
-
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
+import MyNotes from "./pages/MyNotes/MyNotes";
 import "./styles.css";
 
 const theme = createTheme({

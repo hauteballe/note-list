@@ -1,66 +1,68 @@
-import React from "react";
+import PropTypes from "prop-types";
 import { Typography } from "@mui/material";
-import PropTypes from 'prop-types';
-
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import image from "../../images/main-image.png";
+import IconButton from "@mui/material/IconButton";
+import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
+import ShareIcon from "@mui/icons-material/Share";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Box } from "@mui/system";
 
-function SelectedNote({ note }) {
-  if (note) {
-    return (
-      <Box
-        sx={{
-          width: "fit-content",
-          mt: "1rem",
-          mr: "1rem",
-          ml: "1rem",
-          height: "fit-content",
-          backgroundColor: "#121212",
-        }}
-      >
-        <Card sx={{ minWidth: 275, mt: "1rem" }}>
-          <CardContent>
-            <Typography
-              sx={{ fontSize: 12, mt: "1rem" }}
-              color="text.primary"
-              gutterBottom
-            >
-              {note.title}
-            </Typography>
-            <Typography variant="h5" component="div">
-              {note.description}...
-            </Typography>
-            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-              {note.date}
-            </Typography>
-          </CardContent>
-        </Card>
-      </Box>
-    );
-  } else {
-    return (
-      <Box sx={{ mt: "1rem", ml: "5rem", mr: "1rem" }}>
-        <Card sx={{ width: "100%", height: "500px" }}>
-          <CardContent>
-            <Typography variant="h4" component="h4">
-              Select note to display
-            </Typography>
-          </CardContent>
-          <CardMedia
-            component="img"
-            height="500px"
-            width="300px"
-            image={image}
-            alt="main image"
-          />
-        </Card>
-      </Box>
-    );
-  }
-}
+import {
+  SelectedBox,
+  SelectedCard,
+  SelectedCardActions,
+  SelectedCardContent,
+  SelectedTitle,
+  SelectedDate,
+  MainBox,
+  MainCard,
+  MainCardMedia,
+} from "./styled";
+
+const SelectedNote = ({ note }) => {
+  return (
+    <Box>
+      {note ? (
+        <SelectedBox>
+          <SelectedCard>
+            <SelectedCardActions disableSpacing>
+              <IconButton aria-label="edit">
+                <ModeEditOutlineIcon />
+              </IconButton>
+              <IconButton aria-label="delete">
+                <DeleteIcon />
+              </IconButton>
+              <IconButton aria-label="share">
+                <ShareIcon />
+              </IconButton>
+            </SelectedCardActions>
+            <SelectedCardContent>
+              <SelectedTitle color="text.secondary" gutterBottom>
+                {note.title}
+              </SelectedTitle>
+              <Typography variant="h5" component="div">
+                {note.description}...
+              </Typography>
+              <SelectedDate>{note.date}</SelectedDate>
+            </SelectedCardContent>
+          </SelectedCard>
+        </SelectedBox>
+      ) : (
+        <MainBox>
+          <MainCard sx={{ width: "100%", height: "500px" }}>
+            <CardContent>
+              <Typography variant="h4" component="h4">
+                Select note to display
+              </Typography>
+            </CardContent>
+            <MainCardMedia component="img" image={image} alt="main image" />
+          </MainCard>
+        </MainBox>
+      )}
+    </Box>
+  );
+};
 
 SelectedNote.propTypes = {
   note: PropTypes.object,
