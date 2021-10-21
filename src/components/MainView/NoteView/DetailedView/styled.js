@@ -1,12 +1,6 @@
+import { Card, CardActions, CardContent, Typography } from "@mui/material";
+import { Box } from "@mui/system";
 import styled from "styled-components";
-import {
-  Box,
-  Card,
-  CardActions,
-  CardContent,
-  Typography,
-  CardMedia,
-} from "@mui/material";
 
 export const SelectedBox = styled(Box)({
   width: "fit-content",
@@ -44,20 +38,4 @@ export const SelectedDate = styled(Typography)({
   display: "flex",
   alignSelf: "flex-end",
   color: "#ffffff",
-});
-
-export const MainBox = styled(Box)({
-  marginTop: "1rem",
-  marginLeft: "5rem",
-  marginRight: "1rem",
-});
-
-export const MainCard = styled(Card)({
-  width: "100%",
-  height: "500px",
-});
-
-export const MainCardMedia = styled(CardMedia)({
-  height: "500px",
-  width: "300px",
 });

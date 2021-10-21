@@ -3,7 +3,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
 
-import shortify from "utils";
+import shortify from "utils/shortify";
 
 import { NotesCard, NotesCardTitle, NotesCardDate } from "./styled";
 
@@ -23,7 +23,7 @@ const NoteCard = ({ note, onClick }) => {
   );
 };
 
-NoteCard.propTypes = {
+NotesCard.propTypes = {
   note: PropTypes.object.isRequired,
   onClick: PropTypes.func,
 };

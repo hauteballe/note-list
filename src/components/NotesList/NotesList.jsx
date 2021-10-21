@@ -6,8 +6,8 @@ import NoteCard from "./NoteCard/NoteCard";
 const NotesList = ({ notes, onNoteSelecting }) => {
   return (
     <Box>
-      {notes.map((note, key) => (
-        <NoteCard note={note} key={key} onClick={onNoteSelecting(note)} />
+      {notes.map((note) => (
+        <NoteCard note={note} key={note.id} onClick={onNoteSelecting(note)} />
       ))}
     </Box>
   );
