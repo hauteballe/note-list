@@ -25,12 +25,13 @@ const MyNotes = () => {
   const onNoteUpdate = (updatedNote) => {
     const updatedNotes = notes.map((note) => {
       if (note.id === updatedNote.id) {
-        return { ...updatedNote };
+        return updatedNote;
       } else {
         return note;
       }
     });
     setNotes(updatedNotes);
+    setSelectedNote(updatedNote);
     const json = JSON.stringify(updatedNotes);
     localStorage.setItem("notes", json);
   };
