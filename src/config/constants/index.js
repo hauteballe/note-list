@@ -35,3 +35,11 @@ export const NOTES = [
     date: new Date().toDateString(),
   },
 ];
+
+export const ROUTES = {
+  baseName: "/note-list",
+  myNotes: "/notes",
+  sharedNotes: "/shared-notes",
+  about: "/about",
+  notFound: "/not-found",
+};

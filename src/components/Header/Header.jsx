@@ -2,32 +2,42 @@ import { ExitToApp } from "@mui/icons-material";
 import {
   AppBar,
   IconButton,
-  Toolbar,
-  Typography,
-  Box,
   Button,
 } from "@mui/material";
 
+import { ROUTES } from 'config/constants';
+
+import { HeaderBox, HeaderToolbar, HeaderLink, ButtonsBox, HeaderLogo } from "./styled";
+
 const Header = () => (
-  <Box sx={{ flexGrow: 1 }}>
+  <HeaderBox>
     <AppBar position="static">
-      <Toolbar>
-        <Typography
+      <HeaderToolbar>
+      <HeaderLink to={ROUTES.myNotes}>
+      <HeaderLogo
           variant="h5"
           component="span"
-          sx={{ color: "primary.main", flexGrow: 1 }}
         >
           Notes app
-        </Typography>
+        </HeaderLogo>
+          </HeaderLink >
+          <ButtonsBox>
+        <HeaderLink to={ROUTES.myNotes}>
         <Button variant="text">MY NOTES</Button>
-        <Button variant="text">SHARED NOTES</Button>
-        <Button variant="text">ABOUT</Button>
+          </HeaderLink>
+          <HeaderLink to={ROUTES.sharedNotes}>
+          <Button variant="text">SHARED NOTES</Button>
+          </HeaderLink>
+          <HeaderLink to={ROUTES.about}>
+          <Button variant="text">ABOUT</Button>
+          </HeaderLink>
         <IconButton color="inherit">
           <ExitToApp />
         </IconButton>
-      </Toolbar>
+        </ButtonsBox>
+      </HeaderToolbar>
     </AppBar>
-  </Box>
+  </HeaderBox>
 );
 
 export default Header;
