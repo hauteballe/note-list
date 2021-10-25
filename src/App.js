@@ -38,10 +38,7 @@ const App = () => (
           <Route path={ROUTES.notFound}>
             <NotFound />
           </Route>
-          <Route>
-            <Redirect to={ROUTES.notFound} />
-            <NotFound />
-          </Route>
+          <Redirect from="*" to={ROUTES.notFound} />
         </Switch>
       </Router>
     </div>
