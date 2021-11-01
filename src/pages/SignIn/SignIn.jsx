@@ -7,7 +7,13 @@ import { Link } from "react-router-dom";
 import Header from "components/Header/Header";
 import { ROUTES } from "config/constants";
 
-import { FormBox, StyledBox, StyledForm } from "./styled";
+import {
+  FormBox,
+  StyledBox,
+  StyledForm,
+  TypographyButton,
+  StyledTypography,
+} from "./styled";
 
 const loginValues = {
   email: "",
@@ -76,16 +82,12 @@ const SignIn = () => {
           )}
         </Formik>
       </FormBox>
-      <Typography
-        sx={{ textAlign: "center", fontSize: "14px", color: "#ffffff" }}
-      >
+      <StyledTypography>
         Don't have an account yet?
-        <Typography component="div">
-          <Link to={ROUTES.signUp} sx={{ color: "#ffffff" }}>
-            Register
-          </Link>
-        </Typography>
-      </Typography>
+        <TypographyButton component="div">
+          <Link to={ROUTES.signUp}>Register</Link>
+        </TypographyButton>
+      </StyledTypography>
     </StyledBox>
   );
 };
