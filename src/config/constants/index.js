@@ -42,4 +42,15 @@ export const ROUTES = {
   sharedNotes: "/shared-notes",
   about: "/about",
   notFound: "/not-found",
+  signIn: "/sign-in",
+  signUp: "/sign-up",
+};
+
+export const INITIAL_VALUES = {
+  email: "",
+  firstName: "",
+  lastName: "",
+  birthday: "",
+  password: "",
+  confirmPassword: "",
 };

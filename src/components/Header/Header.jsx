@@ -30,9 +30,12 @@ const Header = () => (
           <HeaderLink to={ROUTES.about}>
             <Button variant="text">ABOUT</Button>
           </HeaderLink>
-          <IconButton color="inherit">
+          <HeaderLink to={ROUTES.signIn}>
+            <Button variant="text">Sign In</Button>
+          </HeaderLink>
+          {/* <IconButton color="inherit">
             <ExitToApp />
-          </IconButton>
+          </IconButton> */}
         </ButtonsBox>
       </HeaderToolbar>
     </AppBar>

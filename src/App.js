@@ -7,12 +7,15 @@ import {
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import { ROUTES } from "config/constants";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 
 import MyNotes from "./pages/MyNotes/MyNotes";
 import "./styles.css";
 import SharedNotes from "pages/SharedNotes/SharedNotes";
 import About from "pages/About/About";
 import NotFound from "pages/NotFound/NotFound";
+import SignIn from "pages/SignIn/SignIn";
+import SignUp from "pages/SignUp/SignUp";
 
 const theme = createTheme({
   palette: {
@@ -29,11 +32,17 @@ const App = () => (
           <Route path={ROUTES.myNotes}>
             <MyNotes />
           </Route>
-          <Route path={ROUTES.sharedNotes}>
+          <PrivateRoute path={ROUTES.sharedNotes}>
             <SharedNotes />
-          </Route>
+          </PrivateRoute>
           <Route path={ROUTES.about}>
             <About />
+          </Route>
+          <Route path={ROUTES.signIn}>
+            <SignIn />
+          </Route>
+          <Route path={ROUTES.signUp}>
+            <SignUp />
           </Route>
           <Route path={ROUTES.notFound}>
             <NotFound />
