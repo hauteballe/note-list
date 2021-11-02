@@ -29,9 +29,9 @@ const App = () => (
       <Router basename={ROUTES.baseName}>
         <Switch>
           <Redirect exact from={"/"} to={ROUTES.myNotes} />
-          <Route path={ROUTES.myNotes}>
+          <PrivateRoute path={ROUTES.myNotes}>
             <MyNotes />
-          </Route>
+          </PrivateRoute>
           <PrivateRoute path={ROUTES.sharedNotes}>
             <SharedNotes />
           </PrivateRoute>

@@ -3,9 +3,14 @@ import { Box } from "@mui/system";
 import { Field, Formik } from "formik";
 import { object, string } from "yup";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 import Header from "components/Header/Header";
 import { ROUTES } from "config/constants";
+
+import { add } from "../../utils/redux/features/addUser/userSlice";
 
 import {
   FormBox,
@@ -20,8 +25,47 @@ const loginValues = {
   password: "",
 };
 
+function utf8_to_b64(str) {
+  return window.btoa(unescape(encodeURIComponent(str)));
+}
+
 const SignIn = () => {
-  const onSubmit = (values, formikHelpers) => {};
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const redirectToHomePage = () => {
+    history.push("/notes");
+  };
+
+  const onSubmit = (values, formikHelpers) => {
+    const session_url =
+      "https://note-app-training-server.herokuapp.com/api/users/auth";
+    let email = values.email;
+    let password = values.password;
+    let basicAuth = "Basic " + utf8_to_b64(`${email}:${password}`);
+    let isLoggedIn = false;
+
+    axios
+      .post(
+        session_url,
+        {
+          email: email,
+          password: password,
+        },
+        {
+          headers: { Authorization: basicAuth },
+        }
+      )
+      .then(function (response) {
+        axios.defaults.headers.common["Authorization"] = basicAuth;
+        redirectToHomePage();
+        dispatch(add(values.email));
+        const json = JSON.stringify(values);
+        localStorage.setItem("user", json);
+      })
+      .catch(function (error) {
+        console.log("Error on Authentication");
+      });
+  };
 
   return (
     <StyledBox>

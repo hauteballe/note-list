@@ -37,12 +37,11 @@ const SignUp = () => {
       .then((response) => console.log(response));
 
     if (values) {
-      console.log("success!");
       formikHelpers.resetForm();
       const json = JSON.stringify(values);
       localStorage.setItem("user", json);
       redirectToSignIn();
-      dispatch(add(values.username));
+      dispatch(add(values.email));
     }
   };
 
