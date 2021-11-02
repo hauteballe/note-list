@@ -18,6 +18,7 @@ import {
   StyledForm,
   TypographyButton,
   StyledTypography,
+  SignInHeader,
 } from "./styled";
 
 const loginValues = {
@@ -36,13 +37,12 @@ const SignIn = () => {
     history.push("/notes");
   };
 
-  const onSubmit = (values, formikHelpers) => {
+  const onSubmit = (values) => {
     const session_url =
       "https://note-app-training-server.herokuapp.com/api/users/auth";
     let email = values.email;
     let password = values.password;
     let basicAuth = "Basic " + utf8_to_b64(`${email}:${password}`);
-    let isLoggedIn = false;
 
     axios
       .post(
@@ -57,10 +57,10 @@ const SignIn = () => {
       )
       .then(function (response) {
         axios.defaults.headers.common["Authorization"] = basicAuth;
-        redirectToHomePage();
         dispatch(add(values.email));
         const json = JSON.stringify(values);
         localStorage.setItem("user", json);
+        redirectToHomePage();
       })
       .catch(function (error) {
         console.log("Error on Authentication");
@@ -70,12 +70,7 @@ const SignIn = () => {
   return (
     <StyledBox>
       <Header />
-      <Typography
-        variant="h3"
-        sx={{ textAlign: "center", pt: "50px", color: "#ffffff" }}
-      >
-        Sign In
-      </Typography>
+      <SignInHeader variant="h3"> Sign In</SignInHeader>
       <FormBox>
         <Formik
           initialValues={loginValues}

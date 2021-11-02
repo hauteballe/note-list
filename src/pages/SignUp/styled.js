@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { Form } from "formik";
 
 export const StyledBox = styled(Box)({
@@ -26,4 +26,10 @@ export const StyledForm = styled(Form)({
   minWidth: "350px",
   borderRadius: "8px",
   margin: "32px",
+});
+
+export const SignUpHeader = styled(Typography)({
+  textAlign: "center",
+  paddingTop: "50px",
+  color: "#ffffff",
 });

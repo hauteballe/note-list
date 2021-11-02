@@ -37,3 +37,9 @@ export const StyledTypography = styled(Typography)({
   fontSize: "14px",
   color: "#ffffff",
 });
+
+export const SignInHeader = styled(Typography)({
+  textAlign: "center",
+  paddingTop: "50px",
+  color: "#ffffff",
+});

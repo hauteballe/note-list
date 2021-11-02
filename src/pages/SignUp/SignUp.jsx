@@ -11,7 +11,7 @@ import { INITIAL_VALUES } from "config/constants";
 import Header from "components/Header/Header";
 
 import { add } from "../../utils/redux/features/addUser/userSlice";
-import { FormBox, StyledBox, StyledForm } from "./styled";
+import { FormBox, StyledBox, StyledForm, SignUpHeader } from "./styled";
 
 const SignUp = () => {
   const dispatch = useDispatch();
@@ -48,12 +48,7 @@ const SignUp = () => {
   return (
     <StyledBox>
       <Header />
-      <Typography
-        variant="h3"
-        sx={{ textAlign: "center", pt: "50px", color: "#ffffff" }}
-      >
-        Sign Up
-      </Typography>
+      <SignUpHeader variant="h3">Sign Up</SignUpHeader>
       <FormBox>
         <Formik
           initialValues={INITIAL_VALUES}
