@@ -15,15 +15,15 @@ import {
 } from "./styled";
 import { remove } from "../../utils/redux/features/addUser/userSlice";
 
-const Header = ({ values }) => {
+const Header = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const history = useHistory();
   const redirectToSignIn = () => {
-    history.push("/sign-in");
+    history.push(ROUTES.signIn);
   };
 
-  const onClick = (values) => {
+  const onClick = () => {
     localStorage.removeItem("user");
     dispatch(remove(user));
     redirectToSignIn();

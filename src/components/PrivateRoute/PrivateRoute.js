@@ -1,7 +1,8 @@
-import { Route, Redirect } from "react-router-dom";
+import { ROUTES } from "config/constants";
 import { useSelector } from "react-redux";
+import { Route, Redirect } from "react-router-dom";
 
-function PrivateRoute({ children, ...rest }) {
+const PrivateRoute = ({ children, ...rest }) => {
   const user = useSelector((state) => state.user.email);
   let isContentAvailable = Boolean(user);
 
@@ -14,13 +15,13 @@ function PrivateRoute({ children, ...rest }) {
         ) : (
           <Redirect
             to={{
-              pathname: "/note-list/sign-in",
+              pathname: ROUTES.notFound,
             }}
           />
         )
       }
     />
   );
-}
+};
 
 export default PrivateRoute;

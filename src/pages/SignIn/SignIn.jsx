@@ -1,15 +1,17 @@
-import { Button, TextField, Typography } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import { Field, Formik } from "formik";
-import { object, string } from "yup";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { useState, createRef } from "react";
 
 import Header from "components/Header/Header";
+import { AlertMessage } from "components/AlertMessage";
 import { ROUTES } from "config/constants";
+import { SignInValidationSchema } from "validations";
 
+import { logIn } from "../../api/auth";
 import { add } from "../../utils/redux/features/addUser/userSlice";
 
 import {
@@ -26,61 +28,41 @@ const loginValues = {
   password: "",
 };
 
-function utf8_to_b64(str) {
-  return window.btoa(unescape(encodeURIComponent(str)));
-}
-
 const SignIn = () => {
+  const wrapper = createRef();
   const dispatch = useDispatch();
   const history = useHistory();
   const redirectToHomePage = () => {
-    history.push("/notes");
+    history.push(ROUTES.myNotes);
   };
 
-  const onSubmit = (values) => {
-    const session_url =
-      "https://note-app-training-server.herokuapp.com/api/users/auth";
-    let email = values.email;
-    let password = values.password;
-    let basicAuth = "Basic " + utf8_to_b64(`${email}:${password}`);
+  const [errorMessage, setErrorMessage] = useState("");
 
-    axios
-      .post(
-        session_url,
-        {
-          email: email,
-          password: password,
-        },
-        {
-          headers: { Authorization: basicAuth },
-        }
-      )
-      .then(function (response) {
-        axios.defaults.headers.common["Authorization"] = basicAuth;
-        dispatch(add(values.email));
-        const json = JSON.stringify(values);
-        localStorage.setItem("user", json);
-        redirectToHomePage();
-      })
-      .catch(function (error) {
-        console.log("Error on Authentication");
-      });
+  const onSubmit = async (values, response) => {
+    let resp = await logIn({ email: values.email, password: values.password });
+    if (resp.ok) {
+      dispatch(add(values.email));
+      const json = JSON.stringify(values);
+      localStorage.setItem("user", json);
+      redirectToHomePage();
+    } else {
+      setErrorMessage(resp.error.response.data);
+    }
   };
-
   return (
     <StyledBox>
       <Header />
+      <AlertMessage
+        ref={wrapper}
+        message={errorMessage}
+        onClose={() => setErrorMessage("")}
+      />
       <SignInHeader variant="h3"> Sign In</SignInHeader>
       <FormBox>
         <Formik
           initialValues={loginValues}
           onSubmit={onSubmit}
-          validationSchema={object({
-            email: string()
-              .required("Please enter email")
-              .email("Invalid email"),
-            password: string().required("Please enter password"),
-          })}
+          validationSchema={SignInValidationSchema}
         >
           {({ errors, isValid, touched, dirty }) => (
             <StyledForm>

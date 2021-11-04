@@ -1,79 +1,64 @@
-import { Button, TextField, Typography } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Field, Formik } from "formik";
-import { object, string, date } from "yup";
-import * as Yup from "yup";
-import axios from "axios";
+import { useState } from "react";
+import { createRef } from "react";
 
-import { INITIAL_VALUES } from "config/constants";
+import { INITIAL_VALUES, ROUTES } from "config/constants";
 import Header from "components/Header/Header";
+import { AlertMessage } from "components/AlertMessage";
+import { SignUpValidationSchema } from "validations";
 
 import { add } from "../../utils/redux/features/addUser/userSlice";
 import { FormBox, StyledBox, StyledForm, SignUpHeader } from "./styled";
+import { registration } from "api/auth";
 
 const SignUp = () => {
+  const wrapper = createRef();
   const dispatch = useDispatch();
   const history = useHistory();
   const redirectToSignIn = () => {
-    history.push("/sign-in");
+    history.push(ROUTES.signIn);
   };
 
-  const onSubmit = (values, formikHelpers) => {
-    let newUser = {
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const onSubmit = async (values, formikHelpers) => {
+    const newUser = {
       email: values.email,
       firstName: values.firstName,
       lastName: values.lastName,
       birthday: values.birthDate,
       password: values.password,
     };
-
-    console.log(newUser);
-    console.log(typeof newUser.birthday);
-
-    axios
-      .post("https://note-app-training-server.herokuapp.com/api/users", newUser)
-      .then((response) => console.log(response));
-
-    if (values) {
+    let resp = await registration({ newUser: newUser });
+    if (resp.ok) {
       formikHelpers.resetForm();
       const json = JSON.stringify(values);
       localStorage.setItem("user", json);
-      redirectToSignIn();
       dispatch(add(values.email));
+      redirectToSignIn();
+    } else {
+      setErrorMessage(resp.error.response.data);
     }
   };
 
   return (
     <StyledBox>
       <Header />
+      <AlertMessage
+        ref={wrapper}
+        message={errorMessage}
+        onClose={() => setErrorMessage("")}
+      />
       <SignUpHeader variant="h3">Sign Up</SignUpHeader>
       <FormBox>
         <Formik
           initialValues={INITIAL_VALUES}
           onSubmit={onSubmit}
-          validationSchema={object({
-            email: string()
-              .required("Please enter email")
-              .email("Invalid email"),
-            firstName: string()
-              .required("Please enter your name")
-              .min(2, "Name is too short"),
-            lastName: string()
-              .required("Please enter your surname")
-              .min(2, "Surname is too short"),
-            password: string()
-              .required("Please enter password")
-              .min(6, "Your password must be at least 6 characters"),
-            confirmPassword: string()
-              .required("Please confirm password")
-              .oneOf(
-                [Yup.ref("password"), null],
-                "The password and its confirmation do not coincide"
-              ),
-            birthDate: date().required("Please enter your date of birth"),
-          })}
+          validationSchema={SignUpValidationSchema}
         >
           {({ errors, isValid, touched, dirty }) => (
             <StyledForm>

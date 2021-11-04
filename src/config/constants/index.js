@@ -44,6 +44,8 @@ export const ROUTES = {
   notFound: "/not-found",
   signIn: "/sign-in",
   signUp: "/sign-up",
+  authRoute: "/api/users/auth",
+  usersRoute: "/api/users",
 };
 
 export const INITIAL_VALUES = {

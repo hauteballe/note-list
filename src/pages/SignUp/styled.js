@@ -23,7 +23,7 @@ export const StyledForm = styled(Form)({
   flexDirection: "column",
   backgroundColor: "inherit",
   padding: "32px",
-  minWidth: "350px",
+  width: "400px",
   borderRadius: "8px",
   margin: "32px",
 });
