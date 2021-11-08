@@ -25,7 +25,7 @@ const SignUp = () => {
 
   const [errorMessage, setErrorMessage] = useState("");
 
-  const onSubmit = async (values, formikHelpers) => {
+  const onSubmit = async (values, response, formikHelpers) => {
     const newUser = {
       email: values.email,
       firstName: values.firstName,
@@ -33,15 +33,21 @@ const SignUp = () => {
       birthday: values.birthDate,
       password: values.password,
     };
-    let resp = await registration({ newUser: newUser });
-    if (resp.ok) {
+    let authResponse = await registration({ newUser: newUser });
+    if (authResponse.ok) {
+      redirectToSignIn();
       formikHelpers.resetForm();
       const json = JSON.stringify(values);
       localStorage.setItem("user", json);
       dispatch(add(values.email));
-      redirectToSignIn();
     } else {
-      setErrorMessage(resp.error.response.data);
+      if (authResponse.error.response.data) {
+        if (!authResponse.error.response.data.password) {
+          setErrorMessage(authResponse.error.response.data);
+        } else {
+          setErrorMessage(authResponse.error.response.data.password);
+        }
+      }
     }
   };
 

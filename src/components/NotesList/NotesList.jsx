@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import { NOTES } from "config/constants";
 
 import NoteCard from "./NoteCard/NoteCard";
+import NotesActionsPanel from "./NotesActionsPanel/NotesActionsPanel";
 
 const NotesList = ({ notes, onNoteSelecting }) => {
   useEffect(() => {
@@ -14,6 +15,7 @@ const NotesList = ({ notes, onNoteSelecting }) => {
 
   return (
     <Box>
+      <NotesActionsPanel />
       {notes.map((note) => (
         <NoteCard note={note} key={note.id} onClick={onNoteSelecting(note)} />
       ))}

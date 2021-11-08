@@ -39,14 +39,17 @@ const SignIn = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const onSubmit = async (values, response) => {
-    let resp = await logIn({ email: values.email, password: values.password });
-    if (resp.ok) {
+    let authResponse = await logIn({
+      email: values.email,
+      password: values.password,
+    });
+    if (authResponse.ok) {
       dispatch(add(values.email));
       const json = JSON.stringify(values);
       localStorage.setItem("user", json);
       redirectToHomePage();
     } else {
-      setErrorMessage(resp.error.response.data);
+      setErrorMessage(authResponse.error.response.data);
     }
   };
   return (
