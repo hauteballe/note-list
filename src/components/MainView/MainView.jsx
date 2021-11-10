@@ -4,10 +4,19 @@ import { Box } from "@mui/system";
 import NoteView from "./NoteView/NoteView";
 import DefaultView from "./DefaultView/DefaultView";
 
-const MainView = ({ note, onNoteUpdate }) => (
+const MainView = ({
+  note,
+  onNoteUpdate,
+  handleDeleteNote,
+  isDeleteButtonClicked,
+}) => (
   <Box>
     {note ? (
-      <NoteView note={note} onNoteUpdate={onNoteUpdate} />
+      <NoteView
+        note={note}
+        onNoteUpdate={onNoteUpdate}
+        handleDeleteNote={handleDeleteNote}
+      />
     ) : (
       <DefaultView />
     )}

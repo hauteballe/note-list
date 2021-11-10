@@ -1,13 +1,21 @@
 import PropTypes from "prop-types";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 
 import { NOTES } from "config/constants";
 
 import NoteCard from "./NoteCard/NoteCard";
 import NotesActionsPanel from "./NotesActionsPanel/NotesActionsPanel";
+import AddNotePanel from "./NotesActionsPanel/AddNotePanel/AddNotePanel";
 
-const NotesList = ({ notes, onNoteSelecting }) => {
+const NotesList = ({
+  notes,
+  onNoteSelecting,
+  openAddNotePanel,
+  isAddNotePanelOpen,
+  closeAddNotePanel,
+  handleAddNote,
+}) => {
   useEffect(() => {
     const json = JSON.stringify(NOTES);
     localStorage.setItem("notes", json);
@@ -15,7 +23,13 @@ const NotesList = ({ notes, onNoteSelecting }) => {
 
   return (
     <Box>
-      <NotesActionsPanel />
+      <NotesActionsPanel openAddNotePanel={openAddNotePanel} />
+      {isAddNotePanelOpen && (
+        <AddNotePanel
+          closeAddNotePanel={closeAddNotePanel}
+          onSubmit={handleAddNote}
+        />
+      )}
       {notes.map((note) => (
         <NoteCard note={note} key={note.id} onClick={onNoteSelecting(note)} />
       ))}

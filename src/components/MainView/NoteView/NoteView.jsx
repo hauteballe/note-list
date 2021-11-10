@@ -5,7 +5,7 @@ import { useState } from "react";
 import DetailedView from "./DetailedView/DetailedView";
 import EditView from "./EditView/EditView";
 
-const NoteView = ({ note, onNoteUpdate }) => {
+const NoteView = ({ note, onNoteUpdate, handleDeleteNote }) => {
   const [editMode, setEditMode] = useState(false);
 
   const onEditMode = () => {
@@ -25,7 +25,11 @@ const NoteView = ({ note, onNoteUpdate }) => {
           onNoteUpdate={onNoteUpdate}
         />
       ) : (
-        <DetailedView note={note} onEditMode={onEditMode} />
+        <DetailedView
+          note={note}
+          onEditMode={onEditMode}
+          handleDeleteNote={handleDeleteNote}
+        />
       )}
     </Box>
   );

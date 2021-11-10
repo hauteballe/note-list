@@ -36,15 +36,60 @@ const MyNotes = () => {
     localStorage.setItem("notes", json);
   };
 
+  const [isAddNotePanelOpen, setAddNotePanelOpen] = useState(false);
+
+  const openAddNotePanel = () => {
+    setAddNotePanelOpen(true);
+  };
+  const closeAddNotePanel = () => {
+    setAddNotePanelOpen(false);
+  };
+  const handleAddNote = (title, description) => {
+    console.log(title, "title");
+    const newNote = {
+      id: Math.random(),
+      title: title,
+      description: description,
+      date: new Date().toDateString(),
+    };
+    const newNoteData = notes.concat(newNote);
+    setNotes(newNoteData);
+    const json = JSON.stringify(newNoteData);
+    localStorage.setItem("notes", json);
+  };
+
+  const [isDeleteButtonClicked, setDeleteButtonClicked] = useState(false);
+
+  const handleDeleteNote = (id) => {
+    console.log("note id", id);
+    const newNoteData = notes.filter((note) => note.id !== id);
+    setNotes(newNoteData);
+    setDeleteButtonClicked(true);
+    const json = JSON.stringify(newNoteData);
+    localStorage.setItem("notes", json);
+  };
+
   return (
     <StyledBox>
       <Header />
       <Grid container spacing={2} columns={16}>
         <Grid item xs={3}>
-          <NotesList notes={notes} onNoteSelecting={onNoteSelecting} />
+          <NotesList
+            notes={notes}
+            onNoteSelecting={onNoteSelecting}
+            openAddNotePanel={openAddNotePanel}
+            isAddNotePanelOpen={isAddNotePanelOpen}
+            closeAddNotePanel={closeAddNotePanel}
+            handleAddNote={handleAddNote}
+          />
         </Grid>
         <Grid item xs={13}>
-          <MainView note={selectedNote} onNoteUpdate={onNoteUpdate} />
+          <MainView
+            note={selectedNote}
+            onNoteUpdate={onNoteUpdate}
+            handleDeleteNote={handleDeleteNote}
+            isDeleteButtonClicked={isDeleteButtonClicked}
+          />
         </Grid>
       </Grid>
     </StyledBox>

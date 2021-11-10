@@ -1,13 +1,18 @@
 import AddIcon from "@mui/icons-material/Add";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import SortByAlphaIcon from "@mui/icons-material/SortByAlpha";
-import { Card, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { PanelCard } from "./styled";
 
-const NotesActionsPanel = () => {
+const NotesActionsPanel = ({ openAddNotePanel }) => {
   return (
     <PanelCard>
-      <IconButton color="primary" aria-label="add picture" component="span">
+      <IconButton
+        onClick={openAddNotePanel}
+        color="primary"
+        aria-label="add picture"
+        component="span"
+      >
         <AddIcon />
       </IconButton>
       <IconButton

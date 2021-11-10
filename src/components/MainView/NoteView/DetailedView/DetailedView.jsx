@@ -14,30 +14,35 @@ import {
   SelectedDate,
 } from "./styled";
 
-const DetailedView = ({ note, onEditMode }) => (
-  <SelectedBox>
-    <SelectedCard>
-      <SelectedCardActions disableSpacing>
-        <IconButton aria-label="edit" onClick={onEditMode}>
-          <ModeEditOutlineIcon />
-        </IconButton>
-        <IconButton aria-label="delete">
-          <DeleteIcon />
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
-      </SelectedCardActions>
-      <SelectedCardContent>
-        <SelectedTitle gutterBottom>{note.title}</SelectedTitle>
-        <Typography variant="h5" component="div">
-          {note.description}...
-        </Typography>
-        <SelectedDate>{note.date}</SelectedDate>
-      </SelectedCardContent>
-    </SelectedCard>
-  </SelectedBox>
-);
+const DetailedView = ({ note, onEditMode, handleDeleteNote }) => {
+  return (
+    <SelectedBox>
+      <SelectedCard>
+        <SelectedCardActions disableSpacing>
+          <IconButton aria-label="edit" onClick={onEditMode}>
+            <ModeEditOutlineIcon />
+          </IconButton>
+          <IconButton
+            aria-label="delete"
+            onClick={() => handleDeleteNote(note.id)}
+          >
+            <DeleteIcon />
+          </IconButton>
+          <IconButton aria-label="share">
+            <ShareIcon />
+          </IconButton>
+        </SelectedCardActions>
+        <SelectedCardContent>
+          <SelectedTitle gutterBottom>{note.title}</SelectedTitle>
+          <Typography variant="h5" component="div">
+            {note.description}...
+          </Typography>
+          <SelectedDate>{note.date}</SelectedDate>
+        </SelectedCardContent>
+      </SelectedCard>
+    </SelectedBox>
+  );
+};
 
 DetailedView.propTypes = {
   note: PropTypes.object,
