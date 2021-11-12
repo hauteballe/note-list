@@ -28,3 +28,14 @@ export const HeaderLogo = styled(Typography)({
   display: "flex",
   justifySelf: "flex-start",
 });
+
+export const StyledLink = styled(Link)({
+  color: "inherit",
+  textDecoration: "none",
+});
+
+export const TabLink = styled(StyledLink)({
+  "&:hover": {
+    color: "black",
+  },
+});

@@ -4,9 +4,9 @@ import { Form } from "formik";
 
 export const StyledBox = styled(Box)({
   color: "#0288d1",
-  backgroundColor: "#424242",
+  // backgroundColor: "#424242",
   height: "100vh",
-  overflowY: "scroll",
+  // overflowY: "scroll",
 });
 
 export const FormBox = styled(Box)({
@@ -40,6 +40,5 @@ export const StyledTypography = styled(Typography)({
 
 export const SignInHeader = styled(Typography)({
   textAlign: "center",
-  paddingTop: "50px",
-  color: "#ffffff",
+  color: "text.primary",
 });

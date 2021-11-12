@@ -2,23 +2,15 @@ import { ROUTES } from "config/constants";
 import { useSelector } from "react-redux";
 import { Route, Redirect } from "react-router-dom";
 
-const PrivateRoute = ({ children, ...rest }) => {
-  const user = useSelector((state) => state.user.email);
-  let isContentAvailable = Boolean(user);
+const PrivateRoute = (props) => {
+  const { children, ...rest } = props;
+  const isContentAvailable = useSelector((state) => Boolean(state.user.email));
 
   return (
     <Route
       {...rest}
       render={() =>
-        isContentAvailable ? (
-          children
-        ) : (
-          <Redirect
-            to={{
-              pathname: ROUTES.notFound,
-            }}
-          />
-        )
+        isContentAvailable ? children : <Redirect to={ROUTES.signIn} />
       }
     />
   );

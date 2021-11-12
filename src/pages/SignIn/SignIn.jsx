@@ -1,118 +1,138 @@
-import { Button, TextField } from "@mui/material";
-import { Box } from "@mui/system";
-import { Field, Formik } from "formik";
+import {
+  Button,
+  IconButton,
+  Container,
+  Grid,
+  TextField,
+  Box,
+  Typography,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import { useSnackbar } from "notistack";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { useState, createRef } from "react";
+import { useFormik } from "formik";
 
-import Header from "components/Header/Header";
-import { AlertMessage } from "components/AlertMessage";
 import { ROUTES } from "config/constants";
-import { SignInValidationSchema } from "validations";
+import { signInValidationSchema } from "validations";
 
-import { logIn } from "../../api/auth";
-import { add } from "../../utils/redux/features/addUser/userSlice";
+import authApi from "api/auth";
+import { actions } from "store/features/userSlice";
 
-import {
-  FormBox,
-  StyledBox,
-  StyledForm,
-  TypographyButton,
-  StyledTypography,
-  SignInHeader,
-} from "./styled";
+const SignInHeader = () => (
+  <Box pb={4} sx={{ color: "primary.main" }}>
+    <Typography variant="h3" align="center">
+      Sign In
+    </Typography>
+  </Box>
+);
 
-const loginValues = {
-  email: "",
-  password: "",
+const RegisterText = () => (
+  <Box p={2}>
+    <Typography align="center">
+      Don't have an account yet?{" "}
+      <Link sx={{}} to={ROUTES.signUp}>
+        Register
+      </Link>
+    </Typography>
+  </Box>
+);
+
+const SignInForm = ({ onSubmit }) => {
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: signInValidationSchema,
+    onSubmit: onSubmit,
+  });
+
+  return (
+    <div>
+      <form onSubmit={formik.handleSubmit}>
+        <TextField
+          fullWidth
+          id="email"
+          name="email"
+          label="Email"
+          sx={{ marginBottom: "20px" }}
+          value={formik.values.email}
+          onChange={formik.handleChange}
+          error={formik.touched.email && Boolean(formik.errors.email)}
+          helperText={formik.touched.email && formik.errors.email}
+        />
+        <TextField
+          fullWidth
+          id="password"
+          name="password"
+          label="Password"
+          type="password"
+          sx={{ marginBottom: "20px" }}
+          value={formik.values.password}
+          onChange={formik.handleChange}
+          error={formik.touched.password && Boolean(formik.errors.password)}
+          helperText={formik.touched.password && formik.errors.password}
+        />
+        <Button color="primary" variant="contained" fullWidth type="submit">
+          Login
+        </Button>
+      </form>
+    </div>
+  );
 };
 
 const SignIn = () => {
-  const wrapper = createRef();
   const dispatch = useDispatch();
   const history = useHistory();
-  const redirectToHomePage = () => {
-    history.push(ROUTES.myNotes);
-  };
 
-  const [errorMessage, setErrorMessage] = useState("");
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-  const onSubmit = async (values, response) => {
-    let authResponse = await logIn({
-      email: values.email,
-      password: values.password,
-    });
-    if (authResponse.ok) {
-      dispatch(add(values.email));
-      const json = JSON.stringify(values);
-      localStorage.setItem("user", json);
-      redirectToHomePage();
+  const onSubmit = async (values) => {
+    const response = await authApi.logIn({ ...values });
+    if (response.ok) {
+      dispatch(
+        actions.login({
+          ...response.data,
+          basicAuth: authApi.getBasicAuthString({ ...values }),
+        })
+      );
+      history.push(ROUTES.myNotes);
     } else {
-      setErrorMessage(authResponse.error.response.data);
+      enqueueSnackbar(response.error, {
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        variant: "error",
+        action: (key) => (
+          <IconButton onClick={() => closeSnackbar(key)}>
+            <CloseIcon />
+          </IconButton>
+        ),
+      });
     }
   };
+
   return (
-    <StyledBox>
-      <Header />
-      <AlertMessage
-        ref={wrapper}
-        message={errorMessage}
-        onClose={() => setErrorMessage("")}
-      />
-      <SignInHeader variant="h3"> Sign In</SignInHeader>
-      <FormBox>
-        <Formik
-          initialValues={loginValues}
-          onSubmit={onSubmit}
-          validationSchema={SignInValidationSchema}
-        >
-          {({ errors, isValid, touched, dirty }) => (
-            <StyledForm>
-              <Field
-                name="email"
-                type="name"
-                as={TextField}
-                variant="outlined"
-                color="primary"
-                label="E-mail"
-                fullWidth
-                error={Boolean(errors.email) && Boolean(touched.email)}
-                helperText={Boolean(touched.email) && errors.email}
-              />
-              <Box height={16} />
-              <Field
-                name="password"
-                type="password"
-                as={TextField}
-                variant="outlined"
-                color="primary"
-                label="Password"
-                fullWidth
-                error={Boolean(errors.password) && Boolean(touched.password)}
-                helperText={Boolean(touched.password) && errors.password}
-              />
-              <Box height={16} />
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                size="large"
-                disabled={!dirty || !isValid}
-              >
-                Login
-              </Button>
-            </StyledForm>
-          )}
-        </Formik>
-      </FormBox>
-      <StyledTypography>
-        Don't have an account yet?
-        <TypographyButton component="div">
-          <Link to={ROUTES.signUp}>Register</Link>
-        </TypographyButton>
-      </StyledTypography>
-    </StyledBox>
+    <Container maxWidth="xs" disableGutters>
+      <Grid sx={{ height: "100vh" }} container alignItems="center">
+        <Grid item xs={12}>
+          <Grid container direction="column">
+            <Grid item>
+              <SignInHeader />
+            </Grid>
+            <Grid item>
+              <SignInForm onSubmit={onSubmit} />
+            </Grid>
+            <Grid item>
+              <RegisterText />
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 

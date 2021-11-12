@@ -1,22 +1,27 @@
-import { Card, CardMedia } from "@mui/material";
+import { Grid } from "@mui/material";
+import { Box } from "@mui/system";
 
-import Header from "components/Header/Header";
-import image from "images/notfound-image.png";
-
-import { StyledBox } from "./styled";
+import image from "images/not-found.png";
 
 const NotFound = () => (
-  <StyledBox>
-    <Header />
-    <Card sx={{ border: "none", maxWidth: "100vw", maxHeight: "100vw" }}>
-      <CardMedia
-        component="img"
-        alt="not found image"
-        sx={{ height: "94vh" }}
-        image={image}
-      />
-    </Card>
-  </StyledBox>
+  <Box>
+    <Grid
+      sx={{ height: "100vh" }}
+      container
+      direction="row"
+      justifyContent="center"
+      alignItems="center"
+    >
+      <Grid item>
+        <Box
+          component="img"
+          sx={{ height: "500px" }}
+          src={image}
+          alt="not found"
+        />
+      </Grid>
+    </Grid>
+  </Box>
 );
 
 export default NotFound;

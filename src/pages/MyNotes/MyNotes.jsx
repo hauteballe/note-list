@@ -1,98 +1,140 @@
 import { useEffect, useState } from "react";
-import { Grid } from "@mui/material";
+import { Box, Grid } from "@mui/material";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
 
-import { StyledBox } from "./styled";
-import Header from "../../components/Header/Header";
-import MainView from "../../components/MainView/MainView";
-import NotesList from "../../components/NotesList/NotesList";
+import Header from "components/Header/Header";
+import NotesList from "components/NotesList/NotesList";
+import image from "images/main.png";
+import CreateNoteView from "components/CreateNoteView/CreateNoteView";
+import notesApi from "api/notes";
+import DisplayedNoteView from "components/DisplayedNoteView/DisplayedNoteView";
+import EditNoteView from "components/EditNoteView/EditNoteView";
+
+const VIEW_TYPE = {
+  DISPLAY: "display",
+  CREATE: "create",
+  EDIT: "edit",
+};
+
+const EmptyView = () => {
+  return (
+    <Box>
+      <Grid container>
+        <Box
+          component="img"
+          sx={{ height: "500px" }}
+          src={image}
+          alt="not found"
+        />
+      </Grid>
+    </Box>
+  );
+};
 
 const MyNotes = () => {
   const [notes, setNotes] = useState([]);
   const [selectedNote, setSelectedNote] = useState(null);
+  const [viewType, setViewType] = useState(VIEW_TYPE.DISPLAY);
+
+  console.log("selectedNote", selectedNote);
+
+  const getNotes = async () => {
+    const response = await notesApi.getNotesList();
+    console.log(response);
+    if (response.ok) {
+      const notes = response.data;
+      setNotes(notes);
+      console.log(notes);
+    } else {
+      console.log(response.error);
+    }
+  };
 
   useEffect(() => {
-    const json = localStorage.getItem("notes");
-    const savedNotes = JSON.parse(json);
-    if (savedNotes) {
-      setNotes(savedNotes);
-    }
+    getNotes();
   }, []);
 
-  const onNoteSelecting = (note) => () => {
+  const selectNote = (note) => {
+    console.log("selectNote", note);
     setSelectedNote(note);
+    setViewType(VIEW_TYPE.DISPLAY);
   };
 
-  const onNoteUpdate = (updatedNote) => {
-    const updatedNotes = notes.map((note) => {
-      if (note.id === updatedNote.id) {
-        return updatedNote;
-      } else {
-        return note;
-      }
-    });
-    setNotes(updatedNotes);
-    setSelectedNote(updatedNote);
-    const json = JSON.stringify(updatedNotes);
-    localStorage.setItem("notes", json);
+  const [editMode, setEditMode] = useState(false);
+
+  const onEditMode = () => {
+    setEditMode(true);
+    console.log("edit mode on");
   };
 
-  const [isAddNotePanelOpen, setAddNotePanelOpen] = useState(false);
-
-  const openAddNotePanel = () => {
-    setAddNotePanelOpen(true);
-  };
-  const closeAddNotePanel = () => {
-    setAddNotePanelOpen(false);
-  };
-  const handleAddNote = (title, description) => {
-    console.log(title, "title");
-    const newNote = {
-      id: Math.random(),
-      title: title,
-      description: description,
-      date: new Date().toDateString(),
-    };
-    const newNoteData = notes.concat(newNote);
-    setNotes(newNoteData);
-    const json = JSON.stringify(newNoteData);
-    localStorage.setItem("notes", json);
+  const onEditModeCancel = () => {
+    setEditMode(false);
   };
 
-  const [isDeleteButtonClicked, setDeleteButtonClicked] = useState(false);
+  const [createMode, setCreateMode] = useState(false);
 
-  const handleDeleteNote = (id) => {
-    console.log("note id", id);
-    const newNoteData = notes.filter((note) => note.id !== id);
-    setNotes(newNoteData);
-    setDeleteButtonClicked(true);
-    const json = JSON.stringify(newNoteData);
-    localStorage.setItem("notes", json);
+  const onCreateMode = () => {
+    setCreateMode(true);
+    console.log("create mode on");
+  };
+
+  // const onEditModeCancel = () => {
+  //   setEditMode(false);
+  // };
+
+  const getView = () => {
+    if (viewType === VIEW_TYPE.CREATE) {
+      return <CreateNoteView />;
+    } else if (selectedNote && viewType === VIEW_TYPE.DISPLAY) {
+      return (
+        <DisplayedNoteView
+          note={selectedNote}
+          onEditMode={() => setViewType(VIEW_TYPE.EDIT)}
+        />
+      );
+    } else if (selectedNote && viewType === VIEW_TYPE.EDIT) {
+      console.log("EditNoteView selectedNote", selectedNote);
+      return <EditNoteView note={selectedNote} />;
+    } else {
+      return <EmptyView />;
+    }
   };
 
   return (
-    <StyledBox>
+    <Box sx={{ height: "100vh" }}>
       <Header />
-      <Grid container spacing={2} columns={16}>
-        <Grid item xs={3}>
-          <NotesList
-            notes={notes}
-            onNoteSelecting={onNoteSelecting}
-            openAddNotePanel={openAddNotePanel}
-            isAddNotePanelOpen={isAddNotePanelOpen}
-            closeAddNotePanel={closeAddNotePanel}
-            handleAddNote={handleAddNote}
-          />
+      <Box sx={{ height: "calc(100% - 64px)" }}>
+        <Grid container spacing={1}>
+          <Grid item>
+            <NotesList
+              notes={notes}
+              itemProps={{
+                onClick: selectNote,
+              }}
+            />
+          </Grid>
+          <Grid item sx={{ flex: "1" }}>
+            {getView()}
+          </Grid>
         </Grid>
-        <Grid item xs={13}>
-          <MainView
-            note={selectedNote}
-            onNoteUpdate={onNoteUpdate}
-            handleDeleteNote={handleDeleteNote}
-            isDeleteButtonClicked={isDeleteButtonClicked}
-          />
-        </Grid>
-      </Grid>
-    </StyledBox>
+      </Box>
+      <Fab
+        onClick={() => setViewType(VIEW_TYPE.CREATE)}
+        color="primary"
+        aria-label="add"
+        sx={{
+          margin: 0,
+          top: "auto",
+          right: 20,
+          bottom: 20,
+          left: "auto",
+          position: "fixed",
+        }}
+      >
+        <AddIcon />
+      </Fab>
+    </Box>
   );
 };
 

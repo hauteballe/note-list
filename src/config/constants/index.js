@@ -46,6 +46,7 @@ export const ROUTES = {
   signUp: "/sign-up",
   authRoute: "/api/users/auth",
   usersRoute: "/api/users",
+  notesRoute: "/api/notes",
 };
 
 export const INITIAL_VALUES = {

@@ -1,12 +1,9 @@
 import { List, ListItemText } from "@mui/material";
 
-import Header from "components/Header/Header";
-
 import { AboutHeader, StyledBox, AboutListItem } from "./styled";
 
 const About = () => (
   <StyledBox>
-    <Header />
     <AboutHeader variant="h3" component="div">
       This is a simple notes app
     </AboutHeader>

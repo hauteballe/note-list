@@ -1,66 +1,71 @@
-import { ExitToApp } from "@mui/icons-material";
-import { AppBar, IconButton, Button } from "@mui/material";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
-
-import { ROUTES } from "config/constants";
-
 import {
-  HeaderBox,
-  HeaderToolbar,
-  HeaderLink,
-  ButtonsBox,
-  HeaderLogo,
-} from "./styled";
-import { remove } from "../../utils/redux/features/addUser/userSlice";
+  Toolbar,
+  Typography,
+  AppBar,
+  IconButton,
+  Button,
+  Grid,
+} from "@mui/material";
+import { ExitToApp } from "@mui/icons-material";
+import { useSelector, useDispatch } from "react-redux";
 
-const Header = () => {
+import authApi from "api/auth";
+import { ROUTES } from "config/constants";
+import { actions } from "store/features/userSlice";
+
+import { HeaderLink, StyledLink, TabLink } from "./styled";
+
+const Header = (props) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const history = useHistory();
-  const redirectToSignIn = () => {
-    history.push(ROUTES.signIn);
-  };
 
   const onClick = () => {
-    localStorage.removeItem("user");
-    dispatch(remove(user));
-    redirectToSignIn();
+    authApi.logOut();
+    dispatch(actions.remove());
   };
 
   return (
-    <HeaderBox>
-      <AppBar position="static">
-        <HeaderToolbar>
-          <HeaderLink to={ROUTES.myNotes}>
-            <HeaderLogo variant="h5" component="span">
+    <AppBar position="static" {...props}>
+      <Toolbar>
+        <Grid container justifyContent="space-between">
+          <Grid item>
+            <Typography variant="h5" component={StyledLink} to={ROUTES.myNotes}>
               Notes app
-            </HeaderLogo>
-          </HeaderLink>
-          <ButtonsBox>
-            <HeaderLink to={ROUTES.myNotes}>
-              <Button variant="text">MY NOTES</Button>
-            </HeaderLink>
-            <HeaderLink to={ROUTES.sharedNotes}>
-              <Button variant="text">SHARED NOTES</Button>
-            </HeaderLink>
-            <HeaderLink to={ROUTES.about}>
-              <Button variant="text">ABOUT</Button>
-            </HeaderLink>
-            {user.email ? (
-              <IconButton color="inherit" onClick={onClick}>
-                <ExitToApp />
-              </IconButton>
-            ) : (
-              <HeaderLink to={ROUTES.signIn}>
-                <Button variant="text">Sign In</Button>
-              </HeaderLink>
-            )}
-          </ButtonsBox>
-        </HeaderToolbar>
-      </AppBar>
-    </HeaderBox>
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Grid container alignItems="center" spacing={2}>
+              <Grid item>
+                <Typography component={TabLink} to={ROUTES.myNotes}>
+                  MY NOTES
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography component={TabLink} to={ROUTES.sharedNotes}>
+                  SHARED NOTES
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography component={TabLink} to={ROUTES.about}>
+                  ABOUT
+                </Typography>
+              </Grid>
+              <Grid item>
+                {user.email ? (
+                  <IconButton color="inherit" onClick={onClick}>
+                    <ExitToApp />
+                  </IconButton>
+                ) : (
+                  <HeaderLink to={ROUTES.signIn}>
+                    <Button variant="text">Sign In</Button>
+                  </HeaderLink>
+                )}
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Toolbar>
+    </AppBar>
   );
 };
 

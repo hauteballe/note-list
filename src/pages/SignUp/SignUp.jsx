@@ -1,163 +1,160 @@
-import { Button, TextField } from "@mui/material";
+import {
+  Button,
+  Container,
+  Grid,
+  IconButton,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Box } from "@mui/system";
-import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { Field, Formik } from "formik";
-import { useState } from "react";
-import { createRef } from "react";
+import { useFormik } from "formik";
+import CloseIcon from "@mui/icons-material/Close";
+import { useSnackbar } from "notistack";
 
 import { INITIAL_VALUES, ROUTES } from "config/constants";
-import Header from "components/Header/Header";
-import { AlertMessage } from "components/AlertMessage";
-import { SignUpValidationSchema } from "validations";
+import { signUpValidationSchema } from "validations";
+import authApi from "api/auth";
 
-import { add } from "../../utils/redux/features/addUser/userSlice";
-import { FormBox, StyledBox, StyledForm, SignUpHeader } from "./styled";
-import { registration } from "api/auth";
+const SignUpHeader = () => (
+  <Box pb={4} sx={{ color: "primary.main" }}>
+    <Typography variant="h3" align="center">
+      Sign Up
+    </Typography>
+  </Box>
+);
 
-const SignUp = () => {
-  const wrapper = createRef();
-  const dispatch = useDispatch();
-  const history = useHistory();
-  const redirectToSignIn = () => {
-    history.push(ROUTES.signIn);
-  };
-
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const onSubmit = async (values, response, formikHelpers) => {
-    const newUser = {
-      email: values.email,
-      firstName: values.firstName,
-      lastName: values.lastName,
-      birthday: values.birthDate,
-      password: values.password,
-    };
-    let authResponse = await registration({ newUser: newUser });
-    if (authResponse.ok) {
-      redirectToSignIn();
-      formikHelpers.resetForm();
-      const json = JSON.stringify(values);
-      localStorage.setItem("user", json);
-      dispatch(add(values.email));
-    } else {
-      if (authResponse.error.response.data) {
-        if (!authResponse.error.response.data.password) {
-          setErrorMessage(authResponse.error.response.data);
-        } else {
-          setErrorMessage(authResponse.error.response.data.password);
-        }
-      }
-    }
-  };
+const SignUpForm = ({ onSubmit }) => {
+  const formik = useFormik({
+    initialValues: INITIAL_VALUES,
+    validationSchema: signUpValidationSchema,
+    onSubmit: onSubmit,
+  });
 
   return (
-    <StyledBox>
-      <Header />
-      <AlertMessage
-        ref={wrapper}
-        message={errorMessage}
-        onClose={() => setErrorMessage("")}
-      />
-      <SignUpHeader variant="h3">Sign Up</SignUpHeader>
-      <FormBox>
-        <Formik
-          initialValues={INITIAL_VALUES}
-          onSubmit={onSubmit}
-          validationSchema={SignUpValidationSchema}
-        >
-          {({ errors, isValid, touched, dirty }) => (
-            <StyledForm>
-              <Field
-                name="email"
-                type="email"
-                as={TextField}
-                variant="outlined"
-                color="primary"
-                label="E-mail"
-                fullWidth
-                error={Boolean(errors.email) && Boolean(touched.email)}
-                helperText={Boolean(touched.email) && errors.email}
-              />
-              <Box height={16} />
-              <Field
-                name="firstName"
-                type="name"
-                as={TextField}
-                variant="outlined"
-                color="primary"
-                label="First name"
-                fullWidth
-                error={Boolean(errors.firstName) && Boolean(touched.firstName)}
-                helperText={Boolean(touched.firstName) && errors.firstName}
-              />
-              <Box height={16} />
-              <Field
-                name="lastName"
-                type="name"
-                as={TextField}
-                variant="outlined"
-                color="primary"
-                label="Last name"
-                fullWidth
-                error={Boolean(errors.lastName) && Boolean(touched.lastName)}
-                helperText={Boolean(touched.lastName) && errors.lastName}
-              />
-              <Box height={16} />
-              <Field
-                name="birthDate"
-                type="date"
-                as={TextField}
-                variant="outlined"
-                color="primary"
-                fullWidth
-                error={Boolean(errors.birthDate) && Boolean(touched.birthDate)}
-                helperText={Boolean(touched.birthDate) && errors.birthDate}
-              />
-              <Box height={16} />
-              <Field
-                name="password"
-                type="password"
-                as={TextField}
-                variant="outlined"
-                color="primary"
-                label="Password"
-                fullWidth
-                error={Boolean(errors.password) && Boolean(touched.password)}
-                helperText={Boolean(touched.password) && errors.password}
-              />
-              <Box height={16} />
-              <Field
-                name="confirmPassword"
-                type="password"
-                as={TextField}
-                variant="outlined"
-                color="primary"
-                label="Сonfirm password"
-                fullWidth
-                error={
-                  Boolean(errors.confirmPassword) &&
-                  Boolean(touched.confirmPassword)
-                }
-                helperText={
-                  Boolean(touched.confirmPassword) && errors.confirmPassword
-                }
-              />
-              <Box height={16} />
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                size="large"
-                disabled={!dirty || !isValid}
-              >
-                Sign Up
-              </Button>
-            </StyledForm>
-          )}
-        </Formik>
-      </FormBox>
-    </StyledBox>
+    <div>
+      <form onSubmit={formik.handleSubmit}>
+        <TextField
+          fullWidth
+          id="email"
+          name="email"
+          label="Email"
+          sx={{ marginBottom: "20px" }}
+          value={formik.values.email}
+          onChange={formik.handleChange}
+          error={formik.touched.email && Boolean(formik.errors.email)}
+          helperText={formik.touched.email && formik.errors.email}
+        />
+        <TextField
+          fullWidth
+          id="firstName"
+          name="firstName"
+          label="First Name"
+          sx={{ marginBottom: "20px" }}
+          value={formik.values.firstName}
+          onChange={formik.handleChange}
+          error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+          helperText={formik.touched.firstName && formik.errors.firstName}
+        />
+        <TextField
+          fullWidth
+          id="lastName"
+          name="lastName"
+          label="Last Name"
+          sx={{ marginBottom: "20px" }}
+          value={formik.values.lastName}
+          onChange={formik.handleChange}
+          error={formik.touched.lastName && Boolean(formik.errors.lastName)}
+          helperText={formik.touched.lastName && formik.errors.lastName}
+        />
+        <TextField
+          fullWidth
+          id="birthday"
+          type="date"
+          name="birthday"
+          sx={{ marginBottom: "20px" }}
+          value={formik.values.birthday}
+          onChange={formik.handleChange}
+          error={formik.touched.birthday && Boolean(formik.errors.birthday)}
+          helperText={formik.touched.birthday && formik.errors.birthday}
+        />
+        <TextField
+          fullWidth
+          id="password"
+          name="password"
+          label="Password"
+          type="password"
+          sx={{ marginBottom: "20px" }}
+          value={formik.values.password}
+          onChange={formik.handleChange}
+          error={formik.touched.password && Boolean(formik.errors.password)}
+          helperText={formik.touched.password && formik.errors.password}
+        />
+        <TextField
+          fullWidth
+          id="confirmPassword"
+          name="confirmPassword"
+          label="Confirm Password"
+          type="password"
+          sx={{ marginBottom: "20px" }}
+          value={formik.values.confirmPassword}
+          onChange={formik.handleChange}
+          error={
+            formik.touched.confirmPassword &&
+            Boolean(formik.errors.confirmPassword)
+          }
+          helperText={
+            formik.touched.confirmPassword && formik.errors.confirmPassword
+          }
+        />
+        <Button color="primary" variant="contained" fullWidth type="submit">
+          Sign Up
+        </Button>
+      </form>
+    </div>
+  );
+};
+
+const SignUp = () => {
+  const history = useHistory();
+
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+  const onSubmit = async (values) => {
+    const response = await authApi.registration({ data: values });
+
+    if (response.ok) {
+      history.push(ROUTES.signIn);
+    } else {
+      enqueueSnackbar(response.error.response.data, {
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        variant: "error",
+        action: (key) => (
+          <IconButton onClick={() => closeSnackbar(key)}>
+            <CloseIcon />
+          </IconButton>
+        ),
+      });
+    }
+  };
+  return (
+    <Container maxWidth="xs" disableGutters>
+      <Grid sx={{ height: "100vh" }} container alignItems="center">
+        <Grid item xs={12}>
+          <Grid container direction="column">
+            <Grid item>
+              <SignUpHeader />
+            </Grid>
+            <Grid item>
+              <SignUpForm onSubmit={onSubmit} />
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 
