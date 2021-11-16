@@ -8,36 +8,16 @@ import { useSnackbar } from "notistack";
 
 import Header from "components/Header/Header";
 import NotesList from "components/NotesList/NotesList";
-import image from "images/main.png";
 import CreateNoteView from "components/CreateNoteView/CreateNoteView";
-import notesApi from "api/notes";
 import DisplayedNoteView from "components/DisplayedNoteView/DisplayedNoteView";
 import EditNoteView from "components/EditNoteView/EditNoteView";
+import EmptyView from "components/EmptyView/EmptyView";
+import notesApi from "api/notes";
 
 const VIEW_TYPE = {
   DISPLAY: "display",
   CREATE: "create",
   EDIT: "edit",
-};
-
-const EmptyView = () => {
-  return (
-    <Grid
-      sx={{ height: "100%" }}
-      container
-      justifyContent="center"
-      alignItems="center"
-    >
-      <Grid item>
-        <Box
-          component="img"
-          sx={{ height: "400px" }}
-          src={image}
-          alt="main page"
-        />
-      </Grid>
-    </Grid>
-  );
 };
 
 const MyNotes = () => {

@@ -73,7 +73,12 @@ const FormDialog = ({ dialogOpen, setDialogOpen, shareNotes }) => {
   );
 };
 
-const DisplayedNoteView = ({ note, onEditMode, onDeleteBtnClick }) => {
+const DisplayedNoteView = ({
+  note,
+  onEditMode,
+  onDeleteBtnClick,
+  actionsEnabled = true,
+}) => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -119,15 +124,21 @@ const DisplayedNoteView = ({ note, onEditMode, onDeleteBtnClick }) => {
             }}
           >
             <Grid container alignContent="center" justifyContent="flex-end">
-              <IconButton onClick={onEditMode}>
-                <ModeEditIcon />
-              </IconButton>
-              <IconButton onClick={() => onDeleteBtnClick(note)}>
-                <DeleteIcon />
-              </IconButton>
-              <IconButton onClick={() => setDialogOpen(true)}>
-                <ShareIcon />
-              </IconButton>
+              {actionsEnabled && (
+                <>
+                  <IconButton onClick={onEditMode}>
+                    <ModeEditIcon />
+                  </IconButton>
+
+                  <IconButton onClick={() => onDeleteBtnClick(note)}>
+                    <DeleteIcon />
+                  </IconButton>
+                  <IconButton onClick={() => setDialogOpen(true)}>
+                    <ShareIcon />
+                  </IconButton>
+                </>
+              )}
+
               {dialogOpen && (
                 <FormDialog
                   dialogOpen={dialogOpen}

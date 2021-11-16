@@ -60,12 +60,14 @@ const deleteNote = async ({ id }) => {
   return result;
 };
 
-const getSharedNotesList = async () => {
+const getSharedNotesList = async ({ page = 1 }) => {
   const result = {
     ok: true,
   };
   try {
-    const response = await apiClient.get(ROUTES.sharedNotesRoute);
+    const response = await apiClient.get(ROUTES.sharedNotesRoute, {
+      page: page,
+    });
     result.data = response.data;
   } catch (error) {
     result.ok = false;

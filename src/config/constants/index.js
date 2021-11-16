@@ -36,6 +36,12 @@ export const NOTES = [
   },
 ];
 
+export const VIEW_TYPE = {
+  DISPLAY: "display",
+  CREATE: "create",
+  EDIT: "edit",
+};
+
 export const ROUTES = {
   baseName: "/note-list",
   myNotes: "/notes",

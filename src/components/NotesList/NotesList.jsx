@@ -37,6 +37,16 @@ const ListNoteItem = ({ note, onClick, index }) => {
 };
 
 const NotesList = (props) => {
+  const {
+    notes,
+    setNotes,
+    fetchMoreNotes,
+    hasMoreNotes,
+    fetchFilteredNotes,
+    filterEnabled = true,
+    itemProps = {},
+  } = props;
+
   const [filterMode, setFilterMode] = useState(false);
 
   const initialState = {
@@ -50,15 +60,6 @@ const NotesList = (props) => {
   const handleChange = (event) => {
     setFilterData({ ...filterData, [event.target.name]: event.target.value });
   };
-
-  const {
-    notes,
-    setNotes,
-    fetchMoreNotes,
-    hasMoreNotes,
-    fetchFilteredNotes,
-    itemProps = {},
-  } = props;
 
   const filterNotes = async () => {
     await fetchFilteredNotes(filterData);
@@ -92,90 +93,93 @@ const NotesList = (props) => {
 
   return (
     <Box sx={{ height: "100%" }}>
-      <Box p={1}>
-        <Grid container justifyContent="flex-start">
-          <IconButton
-            onClick={() => {
-              setFilterMode(!filterMode);
-            }}
-            size="small"
-            color="primary"
-          >
-            <FilterAltIcon />
-          </IconButton>
-        </Grid>
-        {filterMode && (
-          <Box sx={{ width: "250px" }} pt={1}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  name="name"
-                  id="outlined-search"
-                  type="search"
-                  fullWidth
-                  size="small"
-                  label="Title"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  value={filterData.name}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  name="dateFrom"
-                  type="date"
-                  fullWidth
-                  size="small"
-                  label="Date From"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  name="dateTo"
-                  type="date"
-                  fullWidth
-                  size="small"
-                  label="Date To"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Grid container spacing={1} justifyContent="space-around">
-                  <Grid item xs={6}>
-                    <Button
-                      fullWidth
-                      size="small"
-                      variant="contained"
-                      onClick={filterNotes}
-                    >
-                      Filter
-                    </Button>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Button
-                      fullWidth
-                      size="small"
-                      variant="contained"
-                      onClick={resetFilterNotes}
-                    >
-                      Reset
-                    </Button>
+      {filterEnabled && (
+        <Box p={1}>
+          <Grid container justifyContent="flex-start">
+            <IconButton
+              onClick={() => {
+                setFilterMode(!filterMode);
+              }}
+              size="small"
+              color="primary"
+            >
+              <FilterAltIcon />
+            </IconButton>
+          </Grid>
+          {filterMode && (
+            <Box sx={{ width: "250px" }} pt={1}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    name="name"
+                    id="outlined-search"
+                    type="search"
+                    fullWidth
+                    size="small"
+                    label="Title"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    value={filterData.name}
+                    onChange={handleChange}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    name="dateFrom"
+                    type="date"
+                    fullWidth
+                    size="small"
+                    label="Date From"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    onChange={handleChange}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    name="dateTo"
+                    type="date"
+                    fullWidth
+                    size="small"
+                    label="Date To"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    onChange={handleChange}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Grid container spacing={1} justifyContent="space-around">
+                    <Grid item xs={6}>
+                      <Button
+                        fullWidth
+                        size="small"
+                        variant="contained"
+                        onClick={filterNotes}
+                      >
+                        Filter
+                      </Button>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Button
+                        fullWidth
+                        size="small"
+                        variant="contained"
+                        onClick={resetFilterNotes}
+                      >
+                        Reset
+                      </Button>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-          </Box>
-        )}
-      </Box>
+            </Box>
+          )}
+        </Box>
+      )}
+
       <Box
         id="scrollableBox"
         sx={{
