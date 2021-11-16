@@ -3,6 +3,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useSnackbar } from "notistack";
 import { Button, Grid, IconButton, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import PropTypes from "prop-types";
 
 import notesApi from "api/notes";
 
@@ -125,6 +126,16 @@ const EditNoteView = ({ note, onNoteUpdate }) => {
       </Box>
     </Box>
   );
+};
+
+EditNoteForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+  note: PropTypes.object,
+};
+
+EditNoteView.propTypes = {
+  note: PropTypes.object,
+  onNoteUpdate: PropTypes.func.isRequired,
 };
 
 export default EditNoteView;

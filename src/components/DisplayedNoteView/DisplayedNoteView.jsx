@@ -18,6 +18,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import CloseIcon from "@mui/icons-material/Close";
 import { useEffect, useState } from "react";
 import { useSnackbar } from "notistack";
+import PropTypes from "prop-types";
 
 import authApi from "api/auth";
 import notesApi from "api/notes";
@@ -77,9 +78,9 @@ const DisplayedNoteView = ({ note, onEditMode, onDeleteBtnClick }) => {
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-  const shareNotes = async (users) => {
+  const shareNotes = async (usersData) => {
     const data = {
-      emails: users.map((user) => user.email),
+      users: usersData.map((user) => user.email),
     };
     const response = await notesApi.shareNote(note.id, data);
     if (response.ok) {
@@ -147,6 +148,17 @@ const DisplayedNoteView = ({ note, onEditMode, onDeleteBtnClick }) => {
       </Box>
     </Box>
   );
+};
+
+FormDialog.propTypes = {
+  dialogOpen: PropTypes.bool.isRequired,
+  setDialogOpen: PropTypes.func.isRequired,
+  shareNotes: PropTypes.func.isRequired,
+};
+
+DisplayedNoteView.propTypes = {
+  note: PropTypes.object,
+  onDeleteBtnClick: PropTypes.func.isRequired,
 };
 
 export default DisplayedNoteView;

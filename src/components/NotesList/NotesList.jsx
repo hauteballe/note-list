@@ -6,6 +6,7 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { Box, List, Typography, Grid, TextField } from "@mui/material";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
+import PropTypes from "prop-types";
 
 import shortify from "utils/shortify";
 
@@ -187,6 +188,18 @@ const NotesList = (props) => {
       </Box>
     </Box>
   );
+};
+
+ListNoteItem.propTypes = {
+  note: PropTypes.object,
+  onClick: PropTypes.func.isRequired,
+};
+
+NotesList.propTypes = {
+  notes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  fetchMoreNotes: PropTypes.func.isRequired,
+  hasMoreNotes: PropTypes.bool.isRequired,
+  fetchFilteredNotes: PropTypes.func.isRequired,
 };
 
 export default NotesList;

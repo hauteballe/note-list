@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { useFormik } from "formik";
+import PropTypes from "prop-types";
 
 import { ROUTES } from "config/constants";
 import { signInValidationSchema } from "validations";
@@ -133,6 +134,10 @@ const SignIn = () => {
       </Grid>
     </Container>
   );
+};
+
+SignInForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default SignIn;

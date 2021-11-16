@@ -11,6 +11,7 @@ import { useHistory } from "react-router-dom";
 import { useFormik } from "formik";
 import CloseIcon from "@mui/icons-material/Close";
 import { useSnackbar } from "notistack";
+import PropTypes from "prop-types";
 
 import { INITIAL_VALUES, ROUTES } from "config/constants";
 import { signUpValidationSchema } from "validations";
@@ -156,6 +157,10 @@ const SignUp = () => {
       </Grid>
     </Container>
   );
+};
+
+SignUpForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default SignUp;

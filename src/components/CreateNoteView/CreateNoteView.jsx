@@ -3,6 +3,7 @@ import { Box } from "@mui/system";
 import { useFormik } from "formik";
 import CloseIcon from "@mui/icons-material/Close";
 import { useSnackbar } from "notistack";
+import PropTypes from "prop-types";
 
 import { createNoteFormValidationScema } from "validations";
 import notesApi from "api/notes";
@@ -133,6 +134,15 @@ const CreateNoteView = ({ onNoteAdd }) => {
       </Box>
     </Box>
   );
+};
+
+CreateNoteForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};
+
+CreateNoteView.propTypes = {
+  onNoteAdd: PropTypes.func.isRequired,
+  values: PropTypes.object,
 };
 
 export default CreateNoteView;
