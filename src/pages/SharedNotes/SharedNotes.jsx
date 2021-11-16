@@ -1,14 +1,14 @@
+import { Typography } from "@mui/material";
+import { Box } from "@mui/system";
 import Header from "components/Header/Header";
 
-import { SharedNotesText, StyledBox } from "./styled";
-
 const SharedNotes = () => (
-  <StyledBox>
+  <Box>
     <Header />
-    <SharedNotesText variant="h5" component="div">
+    <Typography variant="h5" component="div">
       There will be shared notes
-    </SharedNotesText>
-  </StyledBox>
+    </Typography>
+  </Box>
 );
 
 export default SharedNotes;

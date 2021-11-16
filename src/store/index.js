@@ -39,7 +39,6 @@ const onRehydrateFinished = () => {
   if (state.user.basicAuth) {
     authApi.authorizeApiClient(state.user.basicAuth);
   }
-  console.log("onRehydrateFinished");
 };
 
 const persistor = persistStore(store, {}, onRehydrateFinished);

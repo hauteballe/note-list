@@ -1,22 +1,13 @@
 import { useFormik } from "formik";
 import CloseIcon from "@mui/icons-material/Close";
-
-import { createNoteFormValidationScema } from "validations";
 import { useSnackbar } from "notistack";
-import {
-  Button,
-  Container,
-  Grid,
-  IconButton,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, Grid, IconButton, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+
 import notesApi from "api/notes";
-import { useState } from "react";
 
 const EditNoteHeader = () => (
-  <Box pb={4} sx={{ color: "primary.main" }}>
+  <Box p={1} pb={2} sx={{ color: "#0000008a" }}>
     <Typography variant="h5" align="left">
       Edit Note
     </Typography>
@@ -24,13 +15,8 @@ const EditNoteHeader = () => (
 );
 
 const EditNoteForm = ({ onSubmit, note }) => {
-  //   const [editNote, setEditNote] = useState({...note});
-  console.log("EditNoteForm", note);
   const formik = useFormik({
     initialValues: { ...note },
-    //   noteTitle: editNote.noteTitle,
-    //   noteDescription: editNote.noteDescription,
-    // },
     onSubmit: onSubmit,
   });
 
@@ -41,7 +27,7 @@ const EditNoteForm = ({ onSubmit, note }) => {
           fullWidth
           id="title"
           name="title"
-          label="Note Title"
+          label="Title"
           sx={{ marginBottom: "20px" }}
           value={formik.values.title}
           onChange={formik.handleChange}
@@ -50,9 +36,11 @@ const EditNoteForm = ({ onSubmit, note }) => {
         />
         <TextField
           fullWidth
+          multiline
           id="description"
           name="description"
-          label="Note Description"
+          label="Description"
+          rows={8}
           sx={{ marginBottom: "20px" }}
           value={formik.values.description}
           onChange={formik.handleChange}
@@ -77,21 +65,20 @@ const EditNoteForm = ({ onSubmit, note }) => {
   );
 };
 
-const EditNoteView = ({ note }) => {
+const EditNoteView = ({ note, onNoteUpdate }) => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const onSubmit = async (values) => {
     const updatedNote = {
       id: note.id,
-      title: values.noteTitle,
-      description: values.noteDescription,
+      title: values.title,
+      description: values.description,
       updatedAt: new Date().toUTCString(),
       createdAt: values.createdAt,
     };
-    const response = await notesApi.updateNote({ data: updatedNote });
-
+    const response = await notesApi.updateNote(updatedNote);
     if (response.ok) {
-      console.log("ok", response.data);
+      onNoteUpdate(updatedNote);
     } else {
       enqueueSnackbar(response.error, {
         anchorOrigin: {
@@ -109,26 +96,34 @@ const EditNoteView = ({ note }) => {
   };
 
   return (
-    <Grid
-    // sx={{
-    //   height: "100vh",
-    //   marginTop: "17px",
-    //   marginLeft: "30px",
-    // }}
-    // container
-    // alignItems="top"
-    >
-      <Grid item xs={12}>
-        <Grid container direction="column">
-          <Grid item>
-            <EditNoteHeader />
+    <Box p={2} pt={3}>
+      <Box
+        sx={{
+          backgroundColor: "#d0d0d042",
+          width: "100%",
+          borderRadius: "5px",
+        }}
+      >
+        <Box
+          sx={{
+            padding: "10px",
+          }}
+        >
+          <Grid item xs={12}>
+            <Grid container direction="column">
+              <Grid item sx={{ pb: "30px" }}>
+                <Box sx={{ boxShadow: "0 4px 3px -3px #1976d2" }}>
+                  <EditNoteHeader />
+                </Box>
+              </Grid>
+              <Grid item>
+                <EditNoteForm onSubmit={onSubmit} note={note} />
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid item>
-            <EditNoteForm onSubmit={onSubmit} note={note} />
-          </Grid>
-        </Grid>
-      </Grid>
-    </Grid>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

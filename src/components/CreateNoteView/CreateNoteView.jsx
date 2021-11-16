@@ -1,21 +1,14 @@
-import {
-  Button,
-  Container,
-  Grid,
-  IconButton,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, Grid, IconButton, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import notesApi from "api/notes";
 import { useFormik } from "formik";
 import CloseIcon from "@mui/icons-material/Close";
-
-import { createNoteFormValidationScema } from "validations";
 import { useSnackbar } from "notistack";
 
+import { createNoteFormValidationScema } from "validations";
+import notesApi from "api/notes";
+
 const CreateNoteHeader = () => (
-  <Box pb={4} sx={{ color: "primary.main" }}>
+  <Box p={1} pb={2} sx={{ color: "#0000008a" }}>
     <Typography variant="h5" align="left">
       Add New Note
     </Typography>
@@ -48,6 +41,8 @@ const CreateNoteForm = ({ onSubmit }) => {
         />
         <TextField
           fullWidth
+          multiline
+          rows={8}
           id="noteDescription"
           name="noteDescription"
           label="Note Description"
@@ -78,7 +73,7 @@ const CreateNoteForm = ({ onSubmit }) => {
   );
 };
 
-const CreateNoteView = () => {
+const CreateNoteView = ({ onNoteAdd }) => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const onSubmit = async (values) => {
@@ -91,7 +86,7 @@ const CreateNoteView = () => {
     const response = await notesApi.addNote({ data: newData });
 
     if (response.ok) {
-      console.log("ok", response.data);
+      onNoteAdd(newData);
     } else {
       enqueueSnackbar(response.error, {
         anchorOrigin: {
@@ -109,28 +104,34 @@ const CreateNoteView = () => {
   };
 
   return (
-    <Container maxWidth="xs" disableGutters>
-      <Grid
+    <Box p={2} pt={3}>
+      <Box
         sx={{
-          height: "100vh",
-          marginTop: "17px",
-          marginLeft: "30px",
+          backgroundColor: "#d0d0d042",
+          width: "100%",
+          borderRadius: "5px",
         }}
-        container
-        alignItems="top"
       >
-        <Grid item xs={12}>
-          <Grid container direction="column">
-            <Grid item>
-              <CreateNoteHeader />
-            </Grid>
-            <Grid item>
-              <CreateNoteForm onSubmit={onSubmit} />
+        <Box
+          sx={{
+            padding: "10px",
+          }}
+        >
+          <Grid item xs={12}>
+            <Grid container direction="column">
+              <Grid item sx={{ pb: "30px" }}>
+                <Box sx={{ boxShadow: "0 4px 3px -3px #1976d2" }}>
+                  <CreateNoteHeader />
+                </Box>
+              </Grid>
+              <Grid item>
+                <CreateNoteForm onSubmit={onSubmit} />
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      </Grid>
-    </Container>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

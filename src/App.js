@@ -19,6 +19,7 @@ import SignIn from "pages/SignIn/SignIn";
 import NotFound from "pages/NotFound/NotFound";
 import About from "pages/About/About";
 import SignUp from "pages/SignUp/SignUp";
+import SharedNotes from "pages/SharedNotes/SharedNotes";
 
 const App = () => {
   return (
@@ -26,7 +27,7 @@ const App = () => {
       <PersistGate loading={null} persistor={persistor}>
         <ThemeProvider theme={theme}>
           <SnackbarProvider>
-            <Router>
+            <Router basename={ROUTES.baseName}>
               <Switch>
                 <Redirect exact from="/" to={ROUTES.myNotes} />
                 <PrivateRoute path={ROUTES.myNotes}>
@@ -34,6 +35,7 @@ const App = () => {
                 </PrivateRoute>
                 <Route path={ROUTES.signIn} component={SignIn} />
                 <Route path={ROUTES.signUp} component={SignUp} />
+                <Route path={ROUTES.sharedNotes} component={SharedNotes} />
                 <Route path={ROUTES.about} component={About} />
                 <Route path={ROUTES.notFound} component={NotFound} />
                 <Redirect from="*" to={ROUTES.notFound} />

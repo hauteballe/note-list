@@ -47,6 +47,7 @@ export const ROUTES = {
   authRoute: "/api/users/auth",
   usersRoute: "/api/users",
   notesRoute: "/api/notes",
+  sharedNotesRoute: "/api/notes/share",
 };
 
 export const INITIAL_VALUES = {

@@ -6,20 +6,7 @@ const addNote = async ({ data }) => {
     ok: true,
   };
   try {
-    await apiClient.post(ROUTES.notesRoute, data);
-  } catch (error) {
-    result.ok = false;
-    result.error = error.response.data;
-  }
-  return result;
-};
-
-const getNotesList = async () => {
-  const result = {
-    ok: true,
-  };
-  try {
-    const response = await apiClient.get(ROUTES.notesRoute);
+    const response = await apiClient.post(ROUTES.notesRoute, data);
     result.data = response.data;
   } catch (error) {
     result.ok = false;
@@ -28,12 +15,72 @@ const getNotesList = async () => {
   return result;
 };
 
-const updateNote = async ({ updatedNote }) => {
+const getNotesList = async ({ page = 1, ...params }) => {
   const result = {
     ok: true,
   };
   try {
-    await apiClient.put(ROUTES.notesRoute + `/${updatedNote.id}`, updatedNote);
+    const response = await apiClient.get(ROUTES.notesRoute, {
+      params: { page: page, ...params },
+    });
+    result.data = response.data;
+  } catch (error) {
+    result.ok = false;
+    result.error = error.response.data;
+  }
+  return result;
+};
+
+const updateNote = async (data) => {
+  const result = {
+    ok: true,
+  };
+  try {
+    const uri = `${ROUTES.notesRoute}/${data.id}`;
+    await apiClient.put(uri, data);
+  } catch (error) {
+    result.ok = false;
+    result.error = error.response.data;
+  }
+  return result;
+};
+
+const deleteNote = async ({ id }) => {
+  const result = {
+    ok: true,
+  };
+  try {
+    const uri = `${ROUTES.notesRoute}/${id}`;
+    console.log(uri, "uri");
+    await apiClient.delete(uri);
+  } catch (error) {
+    result.ok = false;
+    result.error = error.response.data;
+  }
+  return result;
+};
+
+const getSharedNotesList = async () => {
+  const result = {
+    ok: true,
+  };
+  try {
+    const response = await apiClient.get(ROUTES.sharedNotesRoute);
+    result.data = response.data;
+  } catch (error) {
+    result.ok = false;
+    result.error = error.response.data;
+  }
+  return result;
+};
+
+const shareNote = async (id, data) => {
+  const result = {
+    ok: true,
+  };
+  try {
+    const uri = `${ROUTES.sharedNotesRoute}/${id}`;
+    await apiClient.put(uri, data);
   } catch (error) {
     result.ok = false;
     result.error = error.response.data;
@@ -45,5 +92,8 @@ const notesApi = {
   addNote,
   getNotesList,
   updateNote,
+  deleteNote,
+  getSharedNotesList,
+  shareNote,
 };
 export default notesApi;

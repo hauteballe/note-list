@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, IconButton } from "@mui/material";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
+import LinearProgress from "@mui/material/LinearProgress";
+import CloseIcon from "@mui/icons-material/Close";
+import { useSnackbar } from "notistack";
 
 import Header from "components/Header/Header";
 import NotesList from "components/NotesList/NotesList";
@@ -19,83 +22,139 @@ const VIEW_TYPE = {
 
 const EmptyView = () => {
   return (
-    <Box>
-      <Grid container>
+    <Grid
+      sx={{ height: "100%" }}
+      container
+      justifyContent="center"
+      alignItems="center"
+    >
+      <Grid item>
         <Box
           component="img"
-          sx={{ height: "500px" }}
+          sx={{ height: "400px" }}
           src={image}
-          alt="not found"
+          alt="main page"
         />
       </Grid>
-    </Box>
+    </Grid>
   );
 };
 
 const MyNotes = () => {
+  const [page, setPage] = useState(0);
+  const [hasMoreNotes, setHasMoreNotes] = useState(true);
   const [notes, setNotes] = useState([]);
   const [selectedNote, setSelectedNote] = useState(null);
   const [viewType, setViewType] = useState(VIEW_TYPE.DISPLAY);
+  const [loadingNotes, setLoadingNotes] = useState(false);
 
-  console.log("selectedNote", selectedNote);
-
-  const getNotes = async () => {
-    const response = await notesApi.getNotesList();
-    console.log(response);
+  const fetchMoreNotes = async (filterData) => {
+    let nextPage = page + 1;
+    const response = await notesApi.getNotesList({
+      page: nextPage,
+      ...filterData,
+    });
     if (response.ok) {
-      const notes = response.data;
-      setNotes(notes);
-      console.log(notes);
-    } else {
-      console.log(response.error);
+      setNotes(notes.concat(response.data));
+
+      if (response.data && Boolean(response.data.length)) {
+        setPage(nextPage);
+      } else {
+        setHasMoreNotes(false);
+      }
     }
   };
 
+  const getNotesOnPageLoad = async () => {
+    setLoadingNotes(true);
+    const pageOne = await notesApi.getNotesList({ page: 1 });
+    const pageTwo = await notesApi.getNotesList({ page: 2 });
+    if (pageOne.ok && pageTwo.ok) {
+      setNotes([...pageOne.data, ...pageTwo.data]);
+    }
+    setPage(2);
+    setLoadingNotes(false);
+  };
   useEffect(() => {
-    getNotes();
+    getNotesOnPageLoad();
   }, []);
 
+  const fetchFilteredNotes = async (filterData) => {
+    const pageOne = await notesApi.getNotesList({ page: 1, ...filterData });
+    const pageTwo = await notesApi.getNotesList({ page: 2, ...filterData });
+    if (pageOne.ok && pageTwo.ok) {
+      setNotes([...pageOne.data, ...pageTwo.data]);
+    }
+    setPage(2);
+    setHasMoreNotes(true);
+  };
+
   const selectNote = (note) => {
-    console.log("selectNote", note);
     setSelectedNote(note);
     setViewType(VIEW_TYPE.DISPLAY);
   };
 
-  const [editMode, setEditMode] = useState(false);
-
-  const onEditMode = () => {
-    setEditMode(true);
-    console.log("edit mode on");
+  const onNoteUpdate = (note) => {
+    const newNotes = notes.map((item) => {
+      if (item.id === note.id) {
+        return note;
+      } else {
+        return item;
+      }
+    });
+    selectNote(note);
+    setNotes(newNotes);
   };
 
-  const onEditModeCancel = () => {
-    setEditMode(false);
+  const onNoteAdd = (newNote) => {
+    const newNotes = [newNote, ...notes];
+    selectNote(newNote);
+    setNotes(newNotes);
   };
 
-  const [createMode, setCreateMode] = useState(false);
-
-  const onCreateMode = () => {
-    setCreateMode(true);
-    console.log("create mode on");
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const onNoteDelete = (noteToDelete) => {
+    const newNotes = notes.filter((note) => note.id !== noteToDelete.id);
+    setNotes(newNotes);
+    selectNote(null);
   };
 
-  // const onEditModeCancel = () => {
-  //   setEditMode(false);
-  // };
+  const onDeleteBtnClick = async (note) => {
+    const noteToDelete = {
+      id: note.id,
+    };
+    const response = await notesApi.deleteNote(noteToDelete);
+    if (response.ok) {
+      onNoteDelete(noteToDelete);
+    } else {
+      enqueueSnackbar(response.error, {
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        variant: "error",
+        action: (key) => (
+          <IconButton onClick={() => closeSnackbar(key)}>
+            <CloseIcon />
+          </IconButton>
+        ),
+      });
+    }
+  };
 
   const getView = () => {
     if (viewType === VIEW_TYPE.CREATE) {
-      return <CreateNoteView />;
+      return <CreateNoteView onNoteAdd={onNoteAdd} />;
     } else if (selectedNote && viewType === VIEW_TYPE.DISPLAY) {
       return (
         <DisplayedNoteView
           note={selectedNote}
+          onDeleteBtnClick={onDeleteBtnClick}
           onEditMode={() => setViewType(VIEW_TYPE.EDIT)}
         />
       );
     } else if (selectedNote && viewType === VIEW_TYPE.EDIT) {
-      console.log("EditNoteView selectedNote", selectedNote);
-      return <EditNoteView note={selectedNote} />;
+      return <EditNoteView note={selectedNote} onNoteUpdate={onNoteUpdate} />;
     } else {
       return <EmptyView />;
     }
@@ -105,14 +164,23 @@ const MyNotes = () => {
     <Box sx={{ height: "100vh" }}>
       <Header />
       <Box sx={{ height: "calc(100% - 64px)" }}>
-        <Grid container spacing={1}>
-          <Grid item>
-            <NotesList
-              notes={notes}
-              itemProps={{
-                onClick: selectNote,
-              }}
-            />
+        <Grid container spacing={1} sx={{ height: "100%" }}>
+          <Grid item sx={{ height: "100%" }}>
+            {loadingNotes ? (
+              <Box p={1} py={2} sx={{ width: "250px" }}>
+                <LinearProgress />
+              </Box>
+            ) : (
+              <NotesList
+                notes={notes}
+                itemProps={{
+                  onClick: selectNote,
+                }}
+                hasMoreNotes={hasMoreNotes}
+                fetchMoreNotes={fetchMoreNotes}
+                fetchFilteredNotes={fetchFilteredNotes}
+              />
+            )}
           </Grid>
           <Grid item sx={{ flex: "1" }}>
             {getView()}

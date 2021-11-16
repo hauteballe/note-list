@@ -1,70 +1,22 @@
-// import PropTypes from "prop-types";
-// import { useEffect } from "react";
-// import Box from "@mui/material/Box";
-// import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-
-// import { NOTES } from "config/constants";
-
-// import NoteCard from "./NoteCard/NoteCard";
-// import NotesActionsPanel from "./NotesActionsPanel/NotesActionsPanel";
-// import AddNotePanel from "./NotesActionsPanel/AddNotePanel/AddNotePanel";
-
-// const NotesList = ({
-//   notes,
-//   onNoteSelecting,
-//   openAddNotePanel,
-//   isAddNotePanelOpen,
-//   closeAddNotePanel,
-//   handleAddNote,
-// }) => {
-//   useEffect(() => {
-//     const json = JSON.stringify(NOTES);
-//     localStorage.setItem("notes", json);
-//   }, []);
-
-//   const reorder = (list, startIndex, endIndex) => {
-//     const result = Array.from(list);
-//     const [removed] = result.splice(startIndex, 1);
-//     result.splice(endIndex, 0, removed);
-
-//     return result;
-//   };
-
-//   return (
-//     <Box>
-//       <NotesActionsPanel openAddNotePanel={openAddNotePanel} />
-//       {isAddNotePanelOpen && (
-//         <AddNotePanel
-//           closeAddNotePanel={closeAddNotePanel}
-//           onSubmit={handleAddNote}
-//         />
-//       )}
-//       {notes.map((note) => (
-//         <NoteCard note={note} key={note.id} onClick={onNoteSelecting(note)} />
-//       ))}
-//     </Box>
-//   );
-// };
-
-// NotesList.propTypes = {
-//   notes: PropTypes.arrayOf(PropTypes.object).isRequired,
-//   note: PropTypes.object,
-//   onNoteSelecting: PropTypes.func.isRequired,
-// };
-
-// export default NotesList;
-import React from "react";
-
-import { Grid, Box, List, Typography } from "@mui/material";
+import InfiniteScroll from "react-infinite-scroll-component";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import { useState } from "react";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import { Box, List, Typography, Grid, TextField } from "@mui/material";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 
 import shortify from "utils/shortify";
 
-const ListNoteItem = ({ note, onClick }) => {
+const ListNoteItem = ({ note, onClick, index }) => {
   return (
     <ListItem disablePadding>
-      <Box sx={{ borderLeft: "3px solid #1976d2" }}>
+      <Box
+        sx={{
+          borderLeft: "3px solid #1976d2",
+        }}
+      >
         <ListItemButton
           sx={{ minWidth: "250px" }}
           onClick={() => onClick(note)}
@@ -83,16 +35,157 @@ const ListNoteItem = ({ note, onClick }) => {
 };
 
 const NotesList = (props) => {
-  const { notes, itemProps = {} } = props;
-  console.log(notes);
+  const [filterMode, setFilterMode] = useState(false);
+
+  const initialState = {
+    name: "",
+    dateFrom: "",
+    dateTo: "",
+  };
+
+  const [filterData, setFilterData] = useState(initialState);
+
+  const handleChange = (event) => {
+    setFilterData({ ...filterData, [event.target.name]: event.target.value });
+  };
+
+  const {
+    notes,
+    fetchMoreNotes,
+    hasMoreNotes,
+    fetchFilteredNotes,
+    itemProps = {},
+  } = props;
+
+  const filterNotes = async () => {
+    await fetchFilteredNotes(filterData);
+  };
+
+  const resetFilterNotes = async () => {
+    setFilterData(initialState);
+    await fetchFilteredNotes(initialState);
+  };
+
+  const fetchMore = async () => {
+    await fetchMoreNotes(filterData);
+  };
+
   return (
-    <List sx={{ minWidth: "250px", mt: "8px" }} disablePadding>
-      {notes.map((note) => (
-        <Box p={1} key={note.id}>
-          <ListNoteItem note={note} {...itemProps} />
-        </Box>
-      ))}
-    </List>
+    <Box sx={{ height: "100%" }}>
+      <Box p={1}>
+        <Grid container justifyContent="flex-start">
+          <IconButton
+            onClick={() => {
+              setFilterMode(!filterMode);
+            }}
+            size="small"
+            color="primary"
+          >
+            <FilterAltIcon />
+          </IconButton>
+        </Grid>
+        {filterMode && (
+          <Box sx={{ width: "250px" }} pt={1}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  name="name"
+                  id="outlined-search"
+                  type="search"
+                  fullWidth
+                  size="small"
+                  label="Title"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={filterData.name}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  name="dateFrom"
+                  type="date"
+                  fullWidth
+                  size="small"
+                  label="Date From"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  name="dateTo"
+                  type="date"
+                  fullWidth
+                  size="small"
+                  label="Date To"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Grid container spacing={1} justifyContent="space-around">
+                  <Grid item xs={6}>
+                    <Button
+                      fullWidth
+                      size="small"
+                      variant="contained"
+                      onClick={filterNotes}
+                    >
+                      Filter
+                    </Button>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Button
+                      fullWidth
+                      size="small"
+                      variant="contained"
+                      onClick={resetFilterNotes}
+                    >
+                      Reset
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Box>
+        )}
+      </Box>
+      <Box
+        id="scrollableBox"
+        sx={{
+          minWidth: "250px",
+          height: "calc(100% - 50px)",
+          overflow: "auto",
+          "&::-webkit-scrollbar": { display: "none" },
+        }}
+      >
+        <InfiniteScroll
+          dataLength={notes.length}
+          next={fetchMore}
+          hasMore={hasMoreNotes}
+          scrollableTarget="scrollableBox"
+        >
+          <List
+            sx={{
+              minWidth: "250px",
+            }}
+            disablePadding
+          >
+            {notes.map((note) => (
+              <Box p={1} key={note.id} index={note.index}>
+                <ListNoteItem note={note} {...itemProps} />
+              </Box>
+            ))}
+          </List>
+        </InfiniteScroll>
+      </Box>
+    </Box>
   );
 };
 

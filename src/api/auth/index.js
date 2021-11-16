@@ -46,11 +46,26 @@ const registration = async ({ data }) => {
   return result;
 };
 
+const getUsersList = async () => {
+  const result = {
+    ok: true,
+  };
+  try {
+    const response = await apiClient.get(ROUTES.usersRoute);
+    result.data = response.data;
+  } catch (error) {
+    result.ok = false;
+    result.error = error.response.data;
+  }
+  return result;
+};
+
 const authApi = {
   logIn,
   logOut,
   registration,
   getBasicAuthString,
   authorizeApiClient,
+  getUsersList,
 };
 export default authApi;
