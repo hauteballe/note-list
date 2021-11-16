@@ -173,6 +173,7 @@ const MyNotes = () => {
             ) : (
               <NotesList
                 notes={notes}
+                setNotes={setNotes}
                 itemProps={{
                   onClick: selectNote,
                 }}

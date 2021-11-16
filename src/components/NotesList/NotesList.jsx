@@ -7,6 +7,7 @@ import { Box, List, Typography, Grid, TextField } from "@mui/material";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import PropTypes from "prop-types";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import shortify from "utils/shortify";
 
@@ -52,6 +53,7 @@ const NotesList = (props) => {
 
   const {
     notes,
+    setNotes,
     fetchMoreNotes,
     hasMoreNotes,
     fetchFilteredNotes,
@@ -69,6 +71,23 @@ const NotesList = (props) => {
 
   const fetchMore = async () => {
     await fetchMoreNotes(filterData);
+  };
+
+  const reorder = (notesList, startIndex, endIndex) => {
+    const result = [...notesList];
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+
+    return result;
+  };
+
+  const onDragEnd = (result) => {
+    if (!result.destination) {
+      return;
+    }
+
+    const items = reorder(notes, result.source.index, result.destination.index);
+    setNotes(items);
   };
 
   return (
@@ -172,18 +191,43 @@ const NotesList = (props) => {
           hasMore={hasMoreNotes}
           scrollableTarget="scrollableBox"
         >
-          <List
-            sx={{
-              minWidth: "250px",
-            }}
-            disablePadding
-          >
-            {notes.map((note) => (
-              <Box p={1} key={note.id} index={note.index}>
-                <ListNoteItem note={note} {...itemProps} />
-              </Box>
-            ))}
-          </List>
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="notesList">
+              {(provided) => (
+                <List
+                  id="notesList"
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  sx={{
+                    minWidth: "250px",
+                  }}
+                  disablePadding
+                >
+                  {notes.map((note, index) => {
+                    return (
+                      <Draggable
+                        key={note.id}
+                        index={index}
+                        draggableId={String(note.id)}
+                      >
+                        {(provided) => (
+                          <Box
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            p={1}
+                            key={note.id}
+                          >
+                            <ListNoteItem note={note} {...itemProps} />
+                          </Box>
+                        )}
+                      </Draggable>
+                    );
+                  })}
+                </List>
+              )}
+            </Droppable>
+          </DragDropContext>
         </InfiniteScroll>
       </Box>
     </Box>
