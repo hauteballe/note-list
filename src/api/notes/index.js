@@ -66,7 +66,7 @@ const getSharedNotesList = async ({ page = 1 }) => {
   };
   try {
     const response = await apiClient.get(ROUTES.sharedNotesRoute, {
-      page: page,
+      params: { page: page },
     });
     result.data = response.data;
   } catch (error) {

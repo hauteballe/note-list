@@ -20,6 +20,7 @@ const MyNotes = () => {
     selectNote,
     setViewType,
   } = usePresenter();
+
   return (
     <Box sx={{ height: "100vh" }}>
       <Header />

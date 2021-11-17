@@ -5,7 +5,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ShareIcon from "@mui/icons-material/Share";
 import PropTypes from "prop-types";
 
-import usePresenter from "components/CreateNote/hooks/usePresenter";
+import usePresenter from "components/DisplayedNoteView/hooks/usePresenter";
 
 import { FormDialog } from "./FormDialog/FormDialog";
 
@@ -74,7 +74,7 @@ const DisplayedNoteView = ({
 
 DisplayedNoteView.propTypes = {
   note: PropTypes.object,
-  onDeleteBtnClick: PropTypes.func.isRequired,
+  onDeleteBtnClick: PropTypes.func,
 };
 
 export default DisplayedNoteView;

@@ -32,6 +32,7 @@ const usePresenter = ({ note }) => {
       });
     }
   };
+
   return { dialogOpen, setDialogOpen, shareNotes };
 };
 

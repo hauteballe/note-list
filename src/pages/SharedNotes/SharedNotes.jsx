@@ -22,6 +22,7 @@ const SharedNotes = () => {
     const response = await notesApi.getSharedNotesList({
       page: nextPage,
     });
+
     if (response.ok) {
       setSharedNotes(sharedNotes.concat(response.data));
 
@@ -43,6 +44,7 @@ const SharedNotes = () => {
     setPage(2);
     setLoadingNotes(false);
   };
+
   useEffect(() => {
     getNotesOnPageLoad();
   }, []);
@@ -79,7 +81,7 @@ const SharedNotes = () => {
                   onClick: selectNote,
                 }}
                 hasMoreNotes={hasMoreNotes}
-                fetchSharedNotes={fetchSharedNotes}
+                fetchMoreNotes={fetchSharedNotes}
               />
             )}
           </Grid>

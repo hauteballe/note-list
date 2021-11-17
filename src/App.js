@@ -33,9 +33,11 @@ const App = () => {
                 <PrivateRoute path={ROUTES.myNotes}>
                   <MyNotes />
                 </PrivateRoute>
+                <PrivateRoute path={ROUTES.sharedNotes}>
+                  <SharedNotes />
+                </PrivateRoute>
                 <Route path={ROUTES.signIn} component={SignIn} />
                 <Route path={ROUTES.signUp} component={SignUp} />
-                <Route path={ROUTES.sharedNotes} component={SharedNotes} />
                 <Route path={ROUTES.about} component={About} />
                 <Route path={ROUTES.notFound} component={NotFound} />
                 <Redirect from="*" to={ROUTES.notFound} />

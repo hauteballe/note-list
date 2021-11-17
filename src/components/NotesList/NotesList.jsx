@@ -140,6 +140,7 @@ const NotesList = (props) => {
           next={fetchMore}
           hasMore={hasMoreNotes}
           scrollableTarget="scrollableBox"
+          style={{ height: "100%" }}
         >
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="notesList">
@@ -150,6 +151,7 @@ const NotesList = (props) => {
                   ref={provided.innerRef}
                   sx={{
                     minWidth: "250px",
+                    height: "100%",
                   }}
                   disablePadding
                 >
@@ -188,7 +190,6 @@ NotesList.propTypes = {
   notes: PropTypes.arrayOf(PropTypes.object).isRequired,
   fetchMoreNotes: PropTypes.func.isRequired,
   hasMoreNotes: PropTypes.bool.isRequired,
-  fetchFilteredNotes: PropTypes.func.isRequired,
 };
 
 export default NotesList;
