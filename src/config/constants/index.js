@@ -64,3 +64,5 @@ export const INITIAL_VALUES = {
   password: "",
   confirmPassword: "",
 };
+
+export const RANDOM_ID = Math.floor(Math.random() * 1000);

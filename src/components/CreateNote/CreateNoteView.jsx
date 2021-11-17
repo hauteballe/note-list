@@ -1,14 +1,14 @@
-import { Box } from "@mui/system";
 import { Grid } from "@mui/material";
+import { Box } from "@mui/system";
 import PropTypes from "prop-types";
 
-import usePresenter from "components/EditNoteView/hooks/usePresenter";
+import CreateNoteForm from "./CreateNoteForm/CreateNoteForm";
+import CreateNoteHeader from "./CreateNoteHeader/CreateNoteHader";
+import usePresenter from "./hooks/usePresenter";
 
-import { EditNoteHeader } from "./EditNoteHeader/EditNoteHeader";
-import { EditNoteForm } from "./EditNoteForm/EditNoteForm";
+const CreateNoteView = ({ onNoteAdd, onCancelButtonClicked }) => {
+  const { onSubmit } = usePresenter({ onNoteAdd });
 
-const EditNoteView = ({ note, onNoteUpdate, onEditModeCancel }) => {
-  const { onSubmit } = usePresenter({ note, onNoteUpdate });
   return (
     <Box p={2} pt={3}>
       <Box
@@ -27,14 +27,13 @@ const EditNoteView = ({ note, onNoteUpdate, onEditModeCancel }) => {
             <Grid container direction="column">
               <Grid item sx={{ pb: "30px" }}>
                 <Box sx={{ boxShadow: "0 4px 3px -3px #1976d2" }}>
-                  <EditNoteHeader />
+                  <CreateNoteHeader />
                 </Box>
               </Grid>
               <Grid item>
-                <EditNoteForm
+                <CreateNoteForm
                   onSubmit={onSubmit}
-                  note={note}
-                  onEditModeCancel={onEditModeCancel}
+                  onCancelButtonClicked={onCancelButtonClicked}
                 />
               </Grid>
             </Grid>
@@ -45,9 +44,9 @@ const EditNoteView = ({ note, onNoteUpdate, onEditModeCancel }) => {
   );
 };
 
-EditNoteView.propTypes = {
-  note: PropTypes.object,
-  onNoteUpdate: PropTypes.func.isRequired,
+CreateNoteView.propTypes = {
+  onNoteAdd: PropTypes.func.isRequired,
+  values: PropTypes.object,
 };
 
-export default EditNoteView;
+export default CreateNoteView;

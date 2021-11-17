@@ -1,77 +1,13 @@
-import {
-  Typography,
-  IconButton,
-  Grid,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  TextField,
-  Button,
-  DialogActions,
-  Autocomplete,
-} from "@mui/material";
+import { Typography, IconButton, Grid } from "@mui/material";
 import { Box } from "@mui/system";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ShareIcon from "@mui/icons-material/Share";
-import CloseIcon from "@mui/icons-material/Close";
-import { useEffect, useState } from "react";
-import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
 
-import authApi from "api/auth";
-import notesApi from "api/notes";
+import usePresenter from "components/CreateNote/hooks/usePresenter";
 
-const FormDialog = ({ dialogOpen, setDialogOpen, shareNotes }) => {
-  const [usersData, setUsersData] = useState([]);
-
-  const getUsers = async () => {
-    const response = await authApi.getUsersList();
-    if (response.ok) {
-      setUsersData(response.data);
-    }
-  };
-
-  useEffect(() => {
-    getUsers();
-  }, []);
-
-  const [selectedEmails, setSelectedEmails] = useState([]);
-  return (
-    <div>
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-        <DialogTitle>Share your notes</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            To share your notes, please enter emails of users to share the note
-            with.
-          </DialogContentText>
-          <Autocomplete
-            multiple
-            onChange={(event, newValue) => {
-              setSelectedEmails(newValue);
-            }}
-            id="tags-standard"
-            options={usersData}
-            getOptionLabel={(option) => option.email}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                variant="standard"
-                placeholder="Email to share with"
-              />
-            )}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
-          <Button onClick={() => shareNotes(selectedEmails)}>Share</Button>
-        </DialogActions>
-      </Dialog>
-    </div>
-  );
-};
+import { FormDialog } from "./FormDialog/FormDialog";
 
 const DisplayedNoteView = ({
   note,
@@ -79,32 +15,7 @@ const DisplayedNoteView = ({
   onDeleteBtnClick,
   actionsEnabled = true,
 }) => {
-  const [dialogOpen, setDialogOpen] = useState(false);
-
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
-  const shareNotes = async (usersData) => {
-    const data = {
-      users: usersData.map((user) => user.email),
-    };
-    const response = await notesApi.shareNote(note.id, data);
-    if (response.ok) {
-      setDialogOpen(false);
-    } else {
-      enqueueSnackbar(response.error, {
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        variant: "error",
-        action: (key) => (
-          <IconButton onClick={() => closeSnackbar(key)}>
-            <CloseIcon />
-          </IconButton>
-        ),
-      });
-    }
-  };
+  const { dialogOpen, setDialogOpen, shareNotes } = usePresenter({ note });
 
   return (
     <Box p={2}>
@@ -159,12 +70,6 @@ const DisplayedNoteView = ({
       </Box>
     </Box>
   );
-};
-
-FormDialog.propTypes = {
-  dialogOpen: PropTypes.bool.isRequired,
-  setDialogOpen: PropTypes.func.isRequired,
-  shareNotes: PropTypes.func.isRequired,
 };
 
 DisplayedNoteView.propTypes = {

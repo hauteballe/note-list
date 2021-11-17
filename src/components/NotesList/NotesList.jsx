@@ -1,40 +1,14 @@
 import InfiniteScroll from "react-infinite-scroll-component";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import { useState } from "react";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import { Box, List, Typography, Grid, TextField } from "@mui/material";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
+import { Box, List, Grid, TextField } from "@mui/material";
 import PropTypes from "prop-types";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-import shortify from "utils/shortify";
+import { ListNoteItem } from "./ListNoteItem/ListNoteItem";
 
-const ListNoteItem = ({ note, onClick, index }) => {
-  return (
-    <ListItem disablePadding>
-      <Box
-        sx={{
-          borderLeft: "3px solid #1976d2",
-        }}
-      >
-        <ListItemButton
-          sx={{ minWidth: "250px" }}
-          onClick={() => onClick(note)}
-        >
-          <Box>
-            <Typography variant="h5">{note.title}</Typography>
-            <Typography>{shortify(note.description)}...</Typography>
-            <Typography variant="caption">
-              {new Date(note.createdAt).toDateString()}
-            </Typography>
-          </Box>
-        </ListItemButton>
-      </Box>
-    </ListItem>
-  );
-};
+import usePresenter from "components/NotesList/hooks/usePresenter";
 
 const NotesList = (props) => {
   const {
@@ -47,49 +21,21 @@ const NotesList = (props) => {
     itemProps = {},
   } = props;
 
-  const [filterMode, setFilterMode] = useState(false);
-
-  const initialState = {
-    name: "",
-    dateFrom: "",
-    dateTo: "",
-  };
-
-  const [filterData, setFilterData] = useState(initialState);
-
-  const handleChange = (event) => {
-    setFilterData({ ...filterData, [event.target.name]: event.target.value });
-  };
-
-  const filterNotes = async () => {
-    await fetchFilteredNotes(filterData);
-  };
-
-  const resetFilterNotes = async () => {
-    setFilterData(initialState);
-    await fetchFilteredNotes(initialState);
-  };
-
-  const fetchMore = async () => {
-    await fetchMoreNotes(filterData);
-  };
-
-  const reorder = (notesList, startIndex, endIndex) => {
-    const result = [...notesList];
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-
-    return result;
-  };
-
-  const onDragEnd = (result) => {
-    if (!result.destination) {
-      return;
-    }
-
-    const items = reorder(notes, result.source.index, result.destination.index);
-    setNotes(items);
-  };
+  const {
+    filterMode,
+    setFilterMode,
+    filterData,
+    handleChange,
+    filterNotes,
+    resetFilterNotes,
+    fetchMore,
+    onDragEnd,
+  } = usePresenter({
+    notes,
+    setNotes,
+    fetchMoreNotes,
+    fetchFilteredNotes,
+  });
 
   return (
     <Box sx={{ height: "100%" }}>
@@ -236,11 +182,6 @@ const NotesList = (props) => {
       </Box>
     </Box>
   );
-};
-
-ListNoteItem.propTypes = {
-  note: PropTypes.object,
-  onClick: PropTypes.func.isRequired,
 };
 
 NotesList.propTypes = {
