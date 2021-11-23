@@ -18,7 +18,7 @@ const EditNoteContainer = ({ note, onNoteUpdate, onEditModeCancel }) => {
     };
     const response = await notesApi.updateNote(updatedNote);
     if (response.ok) {
-      onNoteUpdate(updatedNote);
+      onNoteUpdate(response.data);
     } else {
       enqueueSnackbar(response.error, {
         anchorOrigin: {

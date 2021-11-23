@@ -5,6 +5,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ShareIcon from "@mui/icons-material/Share";
 import PropTypes from "prop-types";
 
+import { formatDate } from "utils/formatDate";
+
 import { FormDialogContainer } from "./FormDialog/FormDialogContainer";
 import { StyledBox, Wrapper, InnerWrapper, DateText } from "./styled";
 
@@ -51,7 +53,7 @@ const DisplayedNote = ({
         <Typography variant="h4">{note.title}</Typography>
         <Typography>{note.description}</Typography>
         <Typography component={DateText} variant="caption">
-          {new Date(note.createdAt).toDateString()}
+          {formatDate(note.createdAt)}
         </Typography>
       </Box>
     </StyledBox>

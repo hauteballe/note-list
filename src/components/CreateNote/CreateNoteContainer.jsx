@@ -18,7 +18,7 @@ const CreateNoteContainer = ({ onNoteAdd, onCancelButtonClicked }) => {
     const response = await notesApi.addNote({ data: newData });
 
     if (response.ok) {
-      onNoteAdd(newData);
+      onNoteAdd(response.data);
     } else {
       enqueueSnackbar(response.error, {
         anchorOrigin: {

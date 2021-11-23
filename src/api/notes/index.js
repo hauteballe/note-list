@@ -37,7 +37,8 @@ const updateNote = async (data) => {
   };
   try {
     const uri = `${ROUTES.notesRoute}/${data.id}`;
-    await apiClient.put(uri, data);
+    const response = await apiClient.put(uri, data);
+    result.data = response.data;
   } catch (error) {
     result.ok = false;
     result.error = error.response.data;
