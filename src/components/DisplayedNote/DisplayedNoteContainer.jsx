@@ -1,11 +1,19 @@
 import { IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import PropTypes from "prop-types";
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 
 import notesApi from "api/notes";
 
-const usePresenter = ({ note }) => {
+import DisplayedNote from "./DisplayedNote";
+
+const DisplayedNoteContainer = ({
+  note,
+  onEditMode,
+  onDeleteBtnClick,
+  actionsEnabled = true,
+}) => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -33,7 +41,24 @@ const usePresenter = ({ note }) => {
     }
   };
 
-  return { dialogOpen, setDialogOpen, shareNotes };
+  return (
+    <DisplayedNote
+      actionsEnabled={actionsEnabled}
+      onEditMode={onEditMode}
+      onDeleteBtnClick={onDeleteBtnClick}
+      note={note}
+      dialogOpen={dialogOpen}
+      setDialogOpen={setDialogOpen}
+      shareNotes={shareNotes}
+    />
+  );
 };
 
-export default usePresenter;
+DisplayedNoteContainer.propTypes = {
+  note: PropTypes.object,
+  onDeleteBtnClick: PropTypes.func,
+  onEditMode: PropTypes.func,
+  actionsEnable: PropTypes.bool,
+};
+
+export default DisplayedNoteContainer;

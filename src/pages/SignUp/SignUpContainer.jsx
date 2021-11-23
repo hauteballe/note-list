@@ -1,25 +1,24 @@
-import { useSnackbar } from "notistack";
 import { IconButton } from "@mui/material";
+import { useHistory } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
+import { useSnackbar } from "notistack";
 
-import notesApi from "api/notes";
+import { ROUTES } from "config/constants";
+import authApi from "api/auth";
+import SignUp from "./SignUp";
 
-const usePresenter = ({ note, onNoteUpdate }) => {
+const SignUpContainer = () => {
+  const history = useHistory();
+
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const onSubmit = async (values) => {
-    const updatedNote = {
-      id: note.id,
-      title: values.title,
-      description: values.description,
-      updatedAt: new Date().toUTCString(),
-      createdAt: values.createdAt,
-    };
-    const response = await notesApi.updateNote(updatedNote);
+    const response = await authApi.registration({ data: values });
+
     if (response.ok) {
-      onNoteUpdate(updatedNote);
+      history.push(ROUTES.signIn);
     } else {
-      enqueueSnackbar(response.error, {
+      enqueueSnackbar(response.error.response.data, {
         anchorOrigin: {
           vertical: "top",
           horizontal: "center",
@@ -33,8 +32,7 @@ const usePresenter = ({ note, onNoteUpdate }) => {
       });
     }
   };
-
-  return { onSubmit };
+  return <SignUp onSubmit={onSubmit} />;
 };
 
-export default usePresenter;
+export default SignUpContainer;

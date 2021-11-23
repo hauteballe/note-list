@@ -1,10 +1,11 @@
 import { Typography } from "@mui/material";
-import { Box } from "@mui/system";
+
+import { StyledBox } from "./styled";
 
 export const EditNoteHeader = () => (
-  <Box p={1} pb={2} sx={{ color: "#0000008a" }}>
+  <StyledBox>
     <Typography variant="h5" align="left">
       Edit Note
     </Typography>
-  </Box>
+  </StyledBox>
 );

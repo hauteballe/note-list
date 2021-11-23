@@ -1,71 +1,84 @@
-import { Box, Grid } from "@mui/material";
-import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 import LinearProgress from "@mui/material/LinearProgress";
+import PropTypes from "prop-types";
+import Fab from "@mui/material/Fab";
 
-import Header from "components/Header/Header";
-import NotesList from "components/NotesList/NotesList";
+import HeaderContainer from "components/Header/HeaderContainer";
+import NotesList from "components/NotesList/NotesListContainer";
 import { VIEW_TYPE } from "config/constants";
-import usePresenter from "pages/MyNotes/hooks/usePresenter";
 
-const MyNotes = () => {
-  const {
-    notes,
-    setNotes,
-    hasMoreNotes,
-    loadingNotes,
-    fetchMoreNotes,
-    fetchFilteredNotes,
-    getView,
-    selectNote,
-    setViewType,
-  } = usePresenter();
+import {
+  GetViewGrid,
+  LinearProgressBox,
+  NotesBox,
+  StyledBox,
+  StyledGrid,
+} from "./styled";
 
-  return (
-    <Box sx={{ height: "100vh" }}>
-      <Header />
-      <Box sx={{ height: "calc(100% - 64px)" }}>
-        <Grid container spacing={1} sx={{ height: "100%" }}>
-          <Grid item sx={{ height: "100%" }}>
-            {loadingNotes ? (
-              <Box p={1} py={2} sx={{ width: "250px" }}>
-                <LinearProgress />
-              </Box>
-            ) : (
-              <NotesList
-                notes={notes}
-                setNotes={setNotes}
-                itemProps={{
-                  onClick: selectNote,
-                }}
-                hasMoreNotes={hasMoreNotes}
-                fetchMoreNotes={fetchMoreNotes}
-                fetchFilteredNotes={fetchFilteredNotes}
-              />
-            )}
-          </Grid>
-          <Grid item sx={{ flex: "1" }}>
-            {getView()}
-          </Grid>
-        </Grid>
-      </Box>
-      <Fab
-        onClick={() => setViewType(VIEW_TYPE.CREATE)}
-        color="primary"
-        aria-label="add"
-        sx={{
-          margin: 0,
-          top: "auto",
-          right: 20,
-          bottom: 20,
-          left: "auto",
-          position: "fixed",
-        }}
-      >
-        <AddIcon />
-      </Fab>
-    </Box>
-  );
+const MyNotes = ({
+  loadingNotes,
+  notes,
+  setNotes,
+  selectNote,
+  hasMoreNotes,
+  fetchMoreNotes,
+  fetchFilteredNotes,
+  getView,
+  setViewType,
+}) => (
+  <StyledBox>
+    <HeaderContainer />
+    <NotesBox>
+      <StyledGrid container spacing={1}>
+        <StyledGrid item>
+          {loadingNotes ? (
+            <LinearProgressBox p={1} py={2}>
+              <LinearProgress />
+            </LinearProgressBox>
+          ) : (
+            <NotesList
+              notes={notes}
+              setNotes={setNotes}
+              itemProps={{
+                onClick: selectNote,
+              }}
+              hasMoreNotes={hasMoreNotes}
+              fetchMoreNotes={fetchMoreNotes}
+              fetchFilteredNotes={fetchFilteredNotes}
+            />
+          )}
+        </StyledGrid>
+        <GetViewGrid item>{getView()}</GetViewGrid>
+      </StyledGrid>
+    </NotesBox>
+    <Fab
+      onClick={() => setViewType(VIEW_TYPE.CREATE)}
+      color="primary"
+      aria-label="add"
+      sx={{
+        margin: 0,
+        top: "auto",
+        right: 20,
+        bottom: 20,
+        left: "auto",
+        position: "fixed",
+      }}
+    >
+      <AddIcon />
+    </Fab>
+  </StyledBox>
+);
+
+MyNotes.propTypes = {
+  loadingNotes: PropTypes.bool.isRequired,
+  notes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  setNotes: PropTypes.func.isRequired,
+  selectNote: PropTypes.func.isRequired,
+  hasMoreNotes: PropTypes.bool.isRequired,
+  fetchMoreNotes: PropTypes.func.isRequired,
+  fetchFilteredNotes: PropTypes.func.isRequired,
+  getView: PropTypes.func.isRequired,
+  setViewType: PropTypes.func.isRequired,
 };
 
 export default MyNotes;

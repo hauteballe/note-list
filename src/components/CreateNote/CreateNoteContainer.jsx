@@ -1,19 +1,19 @@
+import PropTypes from "prop-types";
 import { useSnackbar } from "notistack";
 import CloseIcon from "@mui/icons-material/Close";
 import { IconButton } from "@mui/material";
 
-import { RANDOM_ID } from "config/constants";
 import notesApi from "api/notes";
 
-const usePresenter = ({ onNoteAdd }) => {
+import CreateNote from "./CreateNote";
+
+const CreateNoteContainer = ({ onNoteAdd, onCancelButtonClicked }) => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const onSubmit = async (values) => {
     const newData = {
-      id: RANDOM_ID,
       title: values.noteTitle,
       description: values.noteDescription,
-      createdAt: new Date().toUTCString(),
     };
     const response = await notesApi.addNote({ data: newData });
 
@@ -34,7 +34,18 @@ const usePresenter = ({ onNoteAdd }) => {
       });
     }
   };
-  return { onSubmit };
+
+  return (
+    <CreateNote
+      onSubmit={onSubmit}
+      onCancelButtonClicked={onCancelButtonClicked}
+    />
+  );
 };
 
-export default usePresenter;
+CreateNoteContainer.propTypes = {
+  onNoteAdd: PropTypes.func.isRequired,
+  onCancelButtonClicked: PropTypes.func.isRequired,
+};
+
+export default CreateNoteContainer;

@@ -1,24 +1,15 @@
-import { Box, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
+
 import image from "images/main.png";
 
-const EmptyView = () => {
-  return (
-    <Grid
-      sx={{ height: "100%" }}
-      container
-      justifyContent="center"
-      alignItems="center"
-    >
-      <Grid item>
-        <Box
-          component="img"
-          sx={{ height: "400px" }}
-          src={image}
-          alt="main page"
-        />
-      </Grid>
+import { ImageBox, StyledGrid } from "./styled";
+
+const EmptyView = () => (
+  <StyledGrid container justifyContent="center" alignItems="center">
+    <Grid item>
+      <ImageBox component="img" src={image} alt="main page" />
     </Grid>
-  );
-};
+  </StyledGrid>
+);
 
 export default EmptyView;

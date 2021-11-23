@@ -3,24 +3,20 @@ import { Box } from "@mui/system";
 
 import image from "images/not-found.png";
 
+import { StyledBox, StyledGrid } from "./styled";
+
 const NotFound = () => (
   <Box>
-    <Grid
-      sx={{ height: "100vh" }}
+    <StyledGrid
       container
       direction="row"
       justifyContent="center"
       alignItems="center"
     >
       <Grid item>
-        <Box
-          component="img"
-          sx={{ height: "500px" }}
-          src={image}
-          alt="not found"
-        />
+        <StyledBox component="img" src={image} alt="not found" />
       </Grid>
-    </Grid>
+    </StyledGrid>
   </Box>
 );
 

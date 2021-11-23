@@ -1,21 +1,16 @@
-import { ListItem, ListItemButton, Typography } from "@mui/material";
+import { ListItem, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import PropTypes from "prop-types";
 
 import shortify from "utils/shortify";
 
-export const ListNoteItem = ({ note, onClick, index }) => {
+import { StyledBox, StyledListItemButton } from "./styled";
+
+export const ListNoteItem = ({ note, onClick }) => {
   return (
     <ListItem disablePadding>
-      <Box
-        sx={{
-          borderLeft: "3px solid #1976d2",
-        }}
-      >
-        <ListItemButton
-          sx={{ minWidth: "250px" }}
-          onClick={() => onClick(note)}
-        >
+      <StyledBox>
+        <StyledListItemButton onClick={() => onClick(note)}>
           <Box>
             <Typography variant="h5">{note.title}</Typography>
             <Typography>{shortify(note.description)}...</Typography>
@@ -23,8 +18,8 @@ export const ListNoteItem = ({ note, onClick, index }) => {
               {new Date(note.createdAt).toDateString()}
             </Typography>
           </Box>
-        </ListItemButton>
-      </Box>
+        </StyledListItemButton>
+      </StyledBox>
     </ListItem>
   );
 };

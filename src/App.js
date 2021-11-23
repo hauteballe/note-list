@@ -13,13 +13,12 @@ import { store, persistor } from "store";
 import { theme } from "theme";
 import { ROUTES } from "config/constants";
 import PrivateRoute from "components/PrivateRoute/PrivateRoute";
-
-import MyNotes from "pages/MyNotes/MyNotes";
-import SignIn from "pages/SignIn/SignIn";
+import MyNotesContainer from "pages/MyNotes/MyNotesContainer";
+import SharedNotesContainer from "pages/SharedNotes/SharedNotesContainer";
+import SignInContainer from "pages/SignIn/SignInContainer";
 import NotFound from "pages/NotFound/NotFound";
 import About from "pages/About/About";
-import SignUp from "pages/SignUp/SignUp";
-import SharedNotes from "pages/SharedNotes/SharedNotes";
+import SignUp from "pages/SignUp/SignUpContainer";
 
 const App = () => {
   return (
@@ -31,12 +30,12 @@ const App = () => {
               <Switch>
                 <Redirect exact from="/" to={ROUTES.myNotes} />
                 <PrivateRoute path={ROUTES.myNotes}>
-                  <MyNotes />
+                  <MyNotesContainer />
                 </PrivateRoute>
                 <PrivateRoute path={ROUTES.sharedNotes}>
-                  <SharedNotes />
+                  <SharedNotesContainer />
                 </PrivateRoute>
-                <Route path={ROUTES.signIn} component={SignIn} />
+                <Route path={ROUTES.signIn} component={SignInContainer} />
                 <Route path={ROUTES.signUp} component={SignUp} />
                 <Route path={ROUTES.about} component={About} />
                 <Route path={ROUTES.notFound} component={NotFound} />

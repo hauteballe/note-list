@@ -1,11 +1,19 @@
+import PropTypes from "prop-types";
 import { useState } from "react";
 
-const usePresenter = ({
-  notes,
-  setNotes,
-  fetchMoreNotes,
-  fetchFilteredNotes,
-}) => {
+import NotesList from "./NotesList";
+
+const NotesListContainer = (props) => {
+  const {
+    filterEnabled,
+    notes,
+    setNotes,
+    fetchMoreNotes,
+    hasMoreNotes,
+    fetchFilteredNotes,
+    itemProps = {},
+  } = props;
+
   const [filterMode, setFilterMode] = useState(false);
 
   const initialState = {
@@ -49,16 +57,32 @@ const usePresenter = ({
     const items = reorder(notes, result.source.index, result.destination.index);
     setNotes(items);
   };
-  return {
-    filterMode,
-    setFilterMode,
-    filterData,
-    handleChange,
-    filterNotes,
-    resetFilterNotes,
-    fetchMore,
-    onDragEnd,
-  };
+
+  return (
+    <NotesList
+      itemProps={itemProps}
+      filterEnabled={filterEnabled}
+      filterMode={filterMode}
+      setFilterMode={setFilterMode}
+      filterData={filterData}
+      handleChange={handleChange}
+      filterNotes={filterNotes}
+      resetFilterNotes={resetFilterNotes}
+      notes={notes}
+      fetchMore={fetchMore}
+      hasMoreNotes={hasMoreNotes}
+      onDragEnd={onDragEnd}
+    />
+  );
 };
 
-export default usePresenter;
+NotesListContainer.propTypes = {
+  notes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  fetchMoreNotes: PropTypes.func.isRequired,
+  hasMoreNotes: PropTypes.bool.isRequired,
+  filterEnabled: PropTypes.bool,
+  setNotes: PropTypes.func.isRequired,
+  fetchFilteredNotes: PropTypes.func,
+};
+
+export default NotesListContainer;

@@ -16,9 +16,9 @@ export const EditNoteForm = ({ onSubmit, note, onEditModeCancel }) => {
           id="title"
           name="title"
           label="Title"
-          sx={{ marginBottom: "20px" }}
           value={formik.values.title}
           onChange={formik.handleChange}
+          sx={{ mb: 2 }}
           error={formik.touched.title && Boolean(formik.errors.title)}
           helperText={formik.touched.noteTitle && formik.errors.noteTitle}
         />
@@ -29,9 +29,9 @@ export const EditNoteForm = ({ onSubmit, note, onEditModeCancel }) => {
           name="description"
           label="Description"
           rows={8}
-          sx={{ marginBottom: "20px" }}
           value={formik.values.description}
           onChange={formik.handleChange}
+          sx={{ mb: 2 }}
           error={
             formik.touched.description && Boolean(formik.errors.description)
           }
@@ -41,7 +41,7 @@ export const EditNoteForm = ({ onSubmit, note, onEditModeCancel }) => {
           color="primary"
           variant="contained"
           type="submit"
-          sx={{ marginRight: "10px" }}
+          sx={{ mr: 2 }}
         >
           Submit
         </Button>
@@ -60,5 +60,6 @@ export const EditNoteForm = ({ onSubmit, note, onEditModeCancel }) => {
 
 EditNoteForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
+  onEditModeCancel: PropTypes.func.isRequired,
   note: PropTypes.object,
 };

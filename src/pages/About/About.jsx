@@ -1,10 +1,11 @@
 import { List, ListItem, ListItemText, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import Header from "components/Header/Header";
+
+import HeaderContainer from "components/Header/HeaderContainer";
 
 const About = () => (
   <Box>
-    <Header />
+    <HeaderContainer />
     <Box p={2}>
       <Typography variant="h5" component="div">
         This is a simple notes app

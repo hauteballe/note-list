@@ -22,9 +22,9 @@ const CreateNoteForm = ({ onSubmit, onCancelButtonClicked }) => {
           id="noteTitle"
           name="noteTitle"
           label="Note Title"
-          sx={{ marginBottom: "20px" }}
           value={formik.values.noteTitle}
           onChange={formik.handleChange}
+          sx={{ mb: 2 }}
           error={formik.touched.noteTitle && Boolean(formik.errors.noteTitle)}
           helperText={formik.touched.noteTitle && formik.errors.noteTitle}
         />
@@ -35,9 +35,9 @@ const CreateNoteForm = ({ onSubmit, onCancelButtonClicked }) => {
           id="noteDescription"
           name="noteDescription"
           label="Note Description"
-          sx={{ marginBottom: "20px" }}
           value={formik.values.noteDescription}
           onChange={formik.handleChange}
+          sx={{ mb: 2 }}
           error={
             formik.touched.noteDescription &&
             Boolean(formik.errors.noteDescription)
@@ -50,7 +50,7 @@ const CreateNoteForm = ({ onSubmit, onCancelButtonClicked }) => {
           color="primary"
           variant="contained"
           type="submit"
-          sx={{ marginRight: "10px" }}
+          sx={{ mr: 2 }}
         >
           Submit
         </Button>
@@ -69,6 +69,7 @@ const CreateNoteForm = ({ onSubmit, onCancelButtonClicked }) => {
 
 CreateNoteForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
+  onCancelButtonClicked: PropTypes.func.isRequired,
 };
 
 export default CreateNoteForm;

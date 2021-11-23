@@ -5,12 +5,14 @@ import { IconButton } from "@mui/material";
 
 import { VIEW_TYPE } from "config/constants";
 import notesApi from "api/notes";
-import CreateNoteView from "components/CreateNote/CreateNoteView";
-import DisplayedNoteView from "components/DisplayedNoteView/DisplayedNoteView";
-import EditNoteView from "components/EditNoteView/EditNoteView";
+import CreateNoteContainer from "components/CreateNote/CreateNoteContainer";
+import DisplayedNoteContainer from "components/DisplayedNote/DisplayedNoteContainer";
+import EditNoteContainer from "components/EditNote/EditNoteContainer";
 import EmptyView from "components/EmptyView/EmptyView";
 
-const usePresenter = () => {
+import MyNotes from "./MyNotes";
+
+const MyNotesContainer = () => {
   const [page, setPage] = useState(0);
   const [hasMoreNotes, setHasMoreNotes] = useState(true);
   const [notes, setNotes] = useState([]);
@@ -123,14 +125,14 @@ const usePresenter = () => {
   const getView = () => {
     if (viewType === VIEW_TYPE.CREATE) {
       return (
-        <CreateNoteView
+        <CreateNoteContainer
           onNoteAdd={onNoteAdd}
           onCancelButtonClicked={onCancelButtonClicked}
         />
       );
     } else if (selectedNote && viewType === VIEW_TYPE.DISPLAY) {
       return (
-        <DisplayedNoteView
+        <DisplayedNoteContainer
           note={selectedNote}
           onDeleteBtnClick={onDeleteBtnClick}
           onEditMode={() => setViewType(VIEW_TYPE.EDIT)}
@@ -138,7 +140,7 @@ const usePresenter = () => {
       );
     } else if (selectedNote && viewType === VIEW_TYPE.EDIT) {
       return (
-        <EditNoteView
+        <EditNoteContainer
           note={selectedNote}
           onNoteUpdate={onNoteUpdate}
           onEditModeCancel={onEditModeCancel}
@@ -149,17 +151,19 @@ const usePresenter = () => {
     }
   };
 
-  return {
-    hasMoreNotes,
-    loadingNotes,
-    fetchMoreNotes,
-    fetchFilteredNotes,
-    getView,
-    notes,
-    setNotes,
-    selectNote,
-    setViewType,
-  };
+  return (
+    <MyNotes
+      loadingNotes={loadingNotes}
+      notes={notes}
+      setNotes={setNotes}
+      selectNote={selectNote}
+      hasMoreNotes={hasMoreNotes}
+      fetchMoreNotes={fetchMoreNotes}
+      fetchFilteredNotes={fetchFilteredNotes}
+      getView={getView}
+      setViewType={setViewType}
+    />
+  );
 };
 
-export default usePresenter;
+export default MyNotesContainer;
