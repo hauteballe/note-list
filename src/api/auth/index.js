@@ -1,21 +1,44 @@
-import axios from "axios";
 import { ROUTES } from "config/constants";
+import { apiClient } from "api/base";
 
 const utf8_to_b64 = (str) => window.btoa(unescape(encodeURIComponent(str)));
 
-export const logIn = async ({ email, password }) => {
+const getBasicAuthString = ({ email, password }) => {
+  return "Basic " + utf8_to_b64(`${email}:${password}`);
+};
+
+const authorizeApiClient = (basicAuth) => {
+  apiClient.defaults.headers.common["Authorization"] = basicAuth;
+};
+
+const logIn = async ({ email, password }) => {
   const result = {
     ok: true,
   };
   try {
-    const basicAuth = "Basic " + utf8_to_b64(`${email}:${password}`);
-    await axios.get(
-      `${process.env.REACT_APP_BACKEND_HOST}${ROUTES.authRoute}`,
-      {
-        headers: { Authorization: basicAuth },
-      }
-    );
-    axios.defaults.headers.common["Authorization"] = basicAuth;
+    const basicAuth = getBasicAuthString({ email, password });
+    const response = await apiClient.get(ROUTES.authRoute, {
+      headers: { Authorization: basicAuth },
+    });
+    result.data = response.data;
+    authorizeApiClient(basicAuth);
+  } catch (error) {
+    result.ok = false;
+    result.error = error.response.data;
+  }
+  return result;
+};
+
+const logOut = () => {
+  delete apiClient.defaults.headers.common["Authorization"];
+};
+
+const registration = async ({ data }) => {
+  const result = {
+    ok: true,
+  };
+  try {
+    await apiClient.post(ROUTES.usersRoute, data);
   } catch (error) {
     result.ok = false;
     result.error = error;
@@ -23,18 +46,26 @@ export const logIn = async ({ email, password }) => {
   return result;
 };
 
-export const registration = async ({ newUser }) => {
+const getUsersList = async () => {
   const result = {
     ok: true,
   };
   try {
-    await axios.post(
-      `${process.env.REACT_APP_BACKEND_HOST}${ROUTES.usersRoute}`,
-      newUser
-    );
+    const response = await apiClient.get(ROUTES.usersRoute);
+    result.data = response.data;
   } catch (error) {
     result.ok = false;
-    result.error = error;
+    result.error = error.response.data;
   }
   return result;
 };
+
+const authApi = {
+  logIn,
+  logOut,
+  registration,
+  getBasicAuthString,
+  authorizeApiClient,
+  getUsersList,
+};
+export default authApi;

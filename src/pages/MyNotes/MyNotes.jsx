@@ -1,54 +1,84 @@
-import { useEffect, useState } from "react";
-import { Grid } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import LinearProgress from "@mui/material/LinearProgress";
+import PropTypes from "prop-types";
+import Fab from "@mui/material/Fab";
 
-import { StyledBox } from "./styled";
-import Header from "../../components/Header/Header";
-import MainView from "../../components/MainView/MainView";
-import NotesList from "../../components/NotesList/NotesList";
+import HeaderContainer from "components/Header/HeaderContainer";
+import NotesList from "components/NotesList/NotesListContainer";
+import { VIEW_TYPE } from "config/constants";
 
-const MyNotes = () => {
-  const [notes, setNotes] = useState([]);
-  const [selectedNote, setSelectedNote] = useState(null);
+import {
+  GetViewGrid,
+  LinearProgressBox,
+  NotesBox,
+  StyledBox,
+  StyledGrid,
+} from "./styled";
 
-  useEffect(() => {
-    const json = localStorage.getItem("notes");
-    const savedNotes = JSON.parse(json);
-    if (savedNotes) {
-      setNotes(savedNotes);
-    }
-  }, []);
+const MyNotes = ({
+  loadingNotes,
+  notes,
+  setNotes,
+  selectNote,
+  hasMoreNotes,
+  fetchMoreNotes,
+  fetchFilteredNotes,
+  getView,
+  setViewType,
+}) => (
+  <StyledBox>
+    <HeaderContainer />
+    <NotesBox>
+      <StyledGrid container spacing={1}>
+        <StyledGrid item>
+          {loadingNotes ? (
+            <LinearProgressBox p={1} py={2}>
+              <LinearProgress />
+            </LinearProgressBox>
+          ) : (
+            <NotesList
+              notes={notes}
+              setNotes={setNotes}
+              itemProps={{
+                onClick: selectNote,
+              }}
+              hasMoreNotes={hasMoreNotes}
+              fetchMoreNotes={fetchMoreNotes}
+              fetchFilteredNotes={fetchFilteredNotes}
+            />
+          )}
+        </StyledGrid>
+        <GetViewGrid item>{getView()}</GetViewGrid>
+      </StyledGrid>
+    </NotesBox>
+    <Fab
+      onClick={() => setViewType(VIEW_TYPE.CREATE)}
+      color="primary"
+      aria-label="add"
+      sx={{
+        margin: 0,
+        top: "auto",
+        right: 20,
+        bottom: 20,
+        left: "auto",
+        position: "fixed",
+      }}
+    >
+      <AddIcon />
+    </Fab>
+  </StyledBox>
+);
 
-  const onNoteSelecting = (note) => () => {
-    setSelectedNote(note);
-  };
-
-  const onNoteUpdate = (updatedNote) => {
-    const updatedNotes = notes.map((note) => {
-      if (note.id === updatedNote.id) {
-        return updatedNote;
-      } else {
-        return note;
-      }
-    });
-    setNotes(updatedNotes);
-    setSelectedNote(updatedNote);
-    const json = JSON.stringify(updatedNotes);
-    localStorage.setItem("notes", json);
-  };
-
-  return (
-    <StyledBox>
-      <Header />
-      <Grid container spacing={2} columns={16}>
-        <Grid item xs={3}>
-          <NotesList notes={notes} onNoteSelecting={onNoteSelecting} />
-        </Grid>
-        <Grid item xs={13}>
-          <MainView note={selectedNote} onNoteUpdate={onNoteUpdate} />
-        </Grid>
-      </Grid>
-    </StyledBox>
-  );
+MyNotes.propTypes = {
+  loadingNotes: PropTypes.bool.isRequired,
+  notes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  setNotes: PropTypes.func.isRequired,
+  selectNote: PropTypes.func.isRequired,
+  hasMoreNotes: PropTypes.bool.isRequired,
+  fetchMoreNotes: PropTypes.func.isRequired,
+  fetchFilteredNotes: PropTypes.func.isRequired,
+  getView: PropTypes.func.isRequired,
+  setViewType: PropTypes.func.isRequired,
 };
 
 export default MyNotes;

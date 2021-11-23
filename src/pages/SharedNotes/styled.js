@@ -1,15 +1,23 @@
-import { Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import { Box } from "@mui/system";
 import styled from "styled-components";
 
-export const StyledBox = styled(Box)({
-  color: "#0288d1",
-  backgroundColor: "#424242",
-  height: "100vh",
-  overflowY: "scroll",
+export const StyledGrid = styled(Grid)({
+  height: "100%",
 });
 
-export const SharedNotesText = styled(Typography)({
-  color: "#ffffff",
-  padding: "1.5vw",
+export const StyledBox = styled(Box)({
+  height: "100vh",
+});
+
+export const InnerBox = styled(Box)({
+  height: "calc(100% - 64px)",
+});
+
+export const LinearProgressBox = styled(Box)({
+  width: "250px",
+});
+
+export const GetViewGrid = styled(Grid)({
+  flex: "1",
 });

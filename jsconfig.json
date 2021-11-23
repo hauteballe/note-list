@@ -7,7 +7,7 @@
     "module": "es2015",
     "baseUrl": "src"
   },
-  "include": ["src"],
+  "include": ["src", "babel.config.js"],
   "exclude": [
     "dist",
     "node_modules",

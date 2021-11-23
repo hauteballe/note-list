@@ -1,80 +1,51 @@
+import { ThemeProvider } from "@mui/system";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Redirect,
 } from "react-router-dom";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { useDispatch } from "react-redux";
-import React from "react";
-import { useEffect, useState } from "react";
-import CircularProgress from "@mui/material/CircularProgress";
-import Box from "@mui/material/Box";
+import { SnackbarProvider } from "notistack";
 
+import { store, persistor } from "store";
+import { theme } from "theme";
 import { ROUTES } from "config/constants";
-import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
-
-import MyNotes from "./pages/MyNotes/MyNotes";
-import "./styles.css";
-import SharedNotes from "pages/SharedNotes/SharedNotes";
-import About from "pages/About/About";
+import PrivateRoute from "components/PrivateRoute/PrivateRoute";
+import MyNotesContainer from "pages/MyNotes/MyNotesContainer";
+import SharedNotesContainer from "pages/SharedNotes/SharedNotesContainer";
+import SignInContainer from "pages/SignIn/SignInContainer";
 import NotFound from "pages/NotFound/NotFound";
-import SignIn from "pages/SignIn/SignIn";
-import SignUp from "pages/SignUp/SignUp";
-import { add } from "./utils/redux/features/addUser/userSlice";
-
-const theme = createTheme({
-  palette: {
-    mode: "dark",
-  },
-});
+import About from "pages/About/About";
+import SignUp from "pages/SignUp/SignUpContainer";
 
 const App = () => {
-  const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const loggedInUser = localStorage.getItem("user");
-    if (loggedInUser) {
-      const foundUser = JSON.parse(loggedInUser);
-      dispatch(add(foundUser.email));
-    }
-    setIsLoading(false);
-  });
-
   return (
-    <ThemeProvider theme={theme}>
-      {isLoading ? (
-        <Box sx={{ display: "flex", color: "secondary" }}>
-          <CircularProgress />
-        </Box>
-      ) : (
-        <Router basename={ROUTES.baseName}>
-          <Switch>
-            <Redirect exact from={"/"} to={ROUTES.myNotes} />
-            <PrivateRoute path={ROUTES.myNotes}>
-              <MyNotes />
-            </PrivateRoute>
-            <PrivateRoute path={ROUTES.sharedNotes}>
-              <SharedNotes />
-            </PrivateRoute>
-            <Route path={ROUTES.about}>
-              <About />
-            </Route>
-            <Route path={ROUTES.signIn}>
-              <SignIn />
-            </Route>
-            <Route path={ROUTES.signUp}>
-              <SignUp />
-            </Route>
-            <Route path={ROUTES.notFound}>
-              <NotFound />
-            </Route>
-            <Redirect from="*" to={ROUTES.notFound} />
-          </Switch>
-        </Router>
-      )}
-    </ThemeProvider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <ThemeProvider theme={theme}>
+          <SnackbarProvider>
+            <Router basename={ROUTES.baseName}>
+              <Switch>
+                <Redirect exact from="/" to={ROUTES.myNotes} />
+                <PrivateRoute path={ROUTES.myNotes}>
+                  <MyNotesContainer />
+                </PrivateRoute>
+                <PrivateRoute path={ROUTES.sharedNotes}>
+                  <SharedNotesContainer />
+                </PrivateRoute>
+                <Route path={ROUTES.signIn} component={SignInContainer} />
+                <Route path={ROUTES.signUp} component={SignUp} />
+                <Route path={ROUTES.about} component={About} />
+                <Route path={ROUTES.notFound} component={NotFound} />
+                <Redirect from="*" to={ROUTES.notFound} />
+              </Switch>
+            </Router>
+          </SnackbarProvider>
+        </ThemeProvider>
+      </PersistGate>
+    </Provider>
   );
 };
 
