@@ -37,8 +37,8 @@ const store = configureStore({
 
 const onRehydrateFinished = () => {
   const state = store.getState();
-  if (state.user.basicAuth) {
-    authApi.authorizeApiClient(state.user.basicAuth);
+  if (state.user.token) {
+    authApi.authorizeApiClient(state.user.token);
   }
 };
 

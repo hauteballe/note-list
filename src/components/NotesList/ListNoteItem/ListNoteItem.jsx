@@ -12,7 +12,7 @@ export const ListNoteItem = ({ note, onClick }) => {
     <ListItem disablePadding>
       <StyledBox>
         <StyledListItemButton onClick={() => onClick(note)}>
-          <Box>
+          <Box data-testid="listNoteContainer">
             <Typography variant="h5">{note.title}</Typography>
             <Typography>{shortify(note.description)}...</Typography>
             <Typography variant="caption">

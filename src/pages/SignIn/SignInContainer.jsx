@@ -21,8 +21,8 @@ const SignInContainer = () => {
     if (response.ok) {
       dispatch(
         actions.login({
-          ...response.data,
-          basicAuth: authApi.getBasicAuthString({ ...values }),
+          token: response.data.token,
+          ...response.data.user,
         })
       );
       history.push(ROUTES.myNotes);
