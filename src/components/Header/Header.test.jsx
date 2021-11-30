@@ -1,9 +1,23 @@
-import { render } from "react-dom";
+import React from "react";
+import { render } from "@testing-library/react";
+import { toBeInTheDocument } from "@testing-library/jest-dom";
+
 import Header from "./Header";
 
 describe("<Header>", () => {
   let props;
   let component;
+  const headerProps = {
+    onclick: jest.fn(),
+    user: {
+      email: "hauteballe@gmail.com",
+    },
+  };
+  const { getByTestId } = render(<Header {...headerProps} />);
+
+  it("test that component renders correctly", () => {
+    expect(getByTestId("header-appbar")).toBeInTheDocument();
+  });
 
   const defaultProps = {
     onClick: jest.fn(),
@@ -13,7 +27,7 @@ describe("<Header>", () => {
   };
 
   const getComponent = () => {
-    component = render(Header, props);
+    component = render(<Header {...props} />);
   };
 
   beforeEach(() => {
