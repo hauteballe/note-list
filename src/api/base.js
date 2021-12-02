@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import jwt_decode from "jwt-decode";
 
 import { actions } from "store/features/userSlice";
+import { getTimestamp } from "utils/getTimestamp";
 
 import authApi from "./auth";
 
@@ -17,7 +18,7 @@ apiClient.interceptors.request.use(
   async (error) => {
     const { decodedToken, refreshToken } = useSelector((state) => state.user);
     const dispatch = useDispatch();
-    if (decodedToken.payload.exp < Math.floor(Date.now() / 1000)) {
+    if (decodedToken.payload.exp < getTimestamp()) {
       try {
         const response = axios.post(
           `${process.env.REACT_APP_BACKEND_HOST}/api/users/auth/refresh`,

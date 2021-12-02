@@ -32,7 +32,11 @@ describe("<Header>", () => {
   };
 
   const getComponent = () => {
-    component = render(<Header {...props} />);
+    component = render(
+      <BrowserRouter>
+        <Header {...props} />)
+      </BrowserRouter>
+    );
   };
 
   beforeEach(() => {

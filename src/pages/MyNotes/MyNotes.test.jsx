@@ -2,6 +2,8 @@ import React from "react";
 import { render } from "@testing-library/react";
 import { toBeInTheDocument } from "@testing-library/jest-dom";
 import { Provider } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
+
 import { store } from "store";
 
 import MyNotes from "./MyNotes";
@@ -21,7 +23,9 @@ describe("<MyNotes>", () => {
 
   const { getByTestId, getByRole } = render(
     <Provider store={store}>
-      <MyNotes {...defaultProps} />
+      <BrowserRouter>
+        <MyNotes {...defaultProps} />
+      </BrowserRouter>
     </Provider>
   );
 
