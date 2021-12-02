@@ -18,7 +18,8 @@ apiClient.interceptors.request.use(
   async (error) => {
     const { decodedToken, refreshToken } = useSelector((state) => state.user);
     const dispatch = useDispatch();
-    if (decodedToken.payload.exp < getTimestamp()) {
+    const timestamp = getTimestamp();
+    if (decodedToken.payload.exp < timestamp) {
       try {
         const response = axios.post(
           `${process.env.REACT_APP_BACKEND_HOST}/api/users/auth/refresh`,
