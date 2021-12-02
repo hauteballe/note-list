@@ -1,6 +1,7 @@
 import React from "react";
 import { render } from "@testing-library/react";
 import { toBeInTheDocument } from "@testing-library/jest-dom";
+import { BrowserRouter } from "react-router-dom";
 
 import Header from "./Header";
 
@@ -13,7 +14,11 @@ describe("<Header>", () => {
       email: "hauteballe@gmail.com",
     },
   };
-  const { getByTestId } = render(<Header {...headerProps} />);
+  const { getByTestId } = render(
+    <BrowserRouter>
+      <Header {...headerProps} />)
+    </BrowserRouter>
+  );
 
   it("test that component renders correctly", () => {
     expect(getByTestId("header-appbar")).toBeInTheDocument();

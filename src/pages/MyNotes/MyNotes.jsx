@@ -1,3 +1,4 @@
+import React from "react";
 import AddIcon from "@mui/icons-material/Add";
 import LinearProgress from "@mui/material/LinearProgress";
 import PropTypes from "prop-types";
@@ -26,7 +27,7 @@ const MyNotes = ({
   getView,
   setViewType,
 }) => (
-  <StyledBox>
+  <StyledBox data-testid="my-notes-container">
     <HeaderContainer />
     <NotesBox>
       <StyledGrid container spacing={1}>

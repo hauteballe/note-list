@@ -1,3 +1,4 @@
+import React from "react";
 import LinearProgress from "@mui/material/LinearProgress";
 import PropTypes from "prop-types";
 
@@ -21,7 +22,7 @@ const SharedNotes = ({
   fetchSharedNotes,
   getView,
 }) => (
-  <StyledBox>
+  <StyledBox data-testid="shared-notes-container">
     <HeaderContainer />
     <InnerBox>
       <StyledGrid container spacing={1}>

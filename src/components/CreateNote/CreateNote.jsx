@@ -1,3 +1,4 @@
+import React from "react";
 import { Grid } from "@mui/material";
 import PropTypes from "prop-types";
 
@@ -6,7 +7,7 @@ import CreateNoteHeader from "./CreateNoteHeader/CreateNoteHeader";
 import { CreateNoteBox, HeaderBox, StyledBox, Wrapper } from "./styled";
 
 const CreateNote = ({ onSubmit, onCancelButtonClicked }) => (
-  <Wrapper>
+  <Wrapper data-testid="create-note-container">
     <CreateNoteBox>
       <StyledBox>
         <Grid item xs={12}>

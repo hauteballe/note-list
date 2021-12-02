@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Autocomplete,
   Button,
@@ -17,7 +18,7 @@ const FormDialog = ({
   shareNotes,
   selectedEmails,
 }) => (
-  <div>
+  <div data-testid="formdialog-wrapper">
     <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
       <DialogTitle>Share your notes</DialogTitle>
       <DialogContent>

@@ -1,12 +1,10 @@
 import React from "react";
-import ListNoteItem from "./ListNoteItem";
 import { render } from "@testing-library/react";
 import { toBeInTheDocument } from "@testing-library/jest-dom";
 
-describe("<ListNoteItem>", () => {
-  let props;
-  let component;
+import { ListNoteItem } from "./ListNoteItem";
 
+describe("<ListNoteItem>", () => {
   const defaultProps = {
     onClick: jest.fn(),
     note: {
@@ -18,18 +16,7 @@ describe("<ListNoteItem>", () => {
 
   const { getByTestId } = render(<ListNoteItem {...defaultProps} />);
 
-  const getComponent = () => {
-    component = render(ListNoteItem, props);
-  };
-
-  beforeEach(() => {
-    props = {
-      ...defaultProps,
-    };
-  });
-
   it("should render a ListNoteItem container", () => {
-    getComponent();
-    component.getByTestId("note-container").toBeInTheDocument();
+    expect(getByTestId("note-container")).toBeInTheDocument();
   });
 });
