@@ -1,3 +1,4 @@
+import React from "react";
 import { ListItem, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import PropTypes from "prop-types";
@@ -12,7 +13,7 @@ export const ListNoteItem = ({ note, onClick }) => {
     <ListItem disablePadding>
       <StyledBox>
         <StyledListItemButton onClick={() => onClick(note)}>
-          <Box>
+          <Box data-testid="note-container">
             <Typography variant="h5">{note.title}</Typography>
             <Typography>{shortify(note.description)}...</Typography>
             <Typography variant="caption">

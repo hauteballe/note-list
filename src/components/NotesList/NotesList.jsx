@@ -1,3 +1,4 @@
+import React from "react";
 import { Button, Grid, IconButton, TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
@@ -22,7 +23,7 @@ const NotesList = ({
   onDragEnd,
   itemProps,
 }) => (
-  <StyledBox>
+  <StyledBox data-testid="notes-list-box">
     {filterEnabled && (
       <Box p={1}>
         <Grid container justifyContent="flex-start">
@@ -35,7 +36,7 @@ const NotesList = ({
           </IconButton>
         </Grid>
         {filterMode && (
-          <FilterBox>
+          <FilterBox data-testid="filter-box">
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -168,12 +169,12 @@ NotesList.propTypes = {
   setFilterMode: PropTypes.func.isRequired,
   filterMode: PropTypes.bool.isRequired,
   filterData: PropTypes.object,
-  handleChange: PropTypes.func.isRequired,
+  handleChange: PropTypes.func,
   filterNotes: PropTypes.func.isRequired,
   resetFilterNotes: PropTypes.func.isRequired,
   notes: PropTypes.arrayOf(PropTypes.object).isRequired,
-  fetchMore: PropTypes.func.isRequired,
-  hasMoreNotes: PropTypes.bool.isRequired,
+  fetchMore: PropTypes.func,
+  hasMoreNotes: PropTypes.bool,
   onDragEnd: PropTypes.func.isRequired,
 };
 

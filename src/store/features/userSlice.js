@@ -7,7 +7,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action) => {
-      return { ...action.payload };
+      return { ...state, ...action.payload };
     },
     remove: () => {
       return {};

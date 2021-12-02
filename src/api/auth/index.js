@@ -1,27 +1,18 @@
 import { ROUTES } from "config/constants";
 import { apiClient } from "api/base";
 
-const utf8_to_b64 = (str) => window.btoa(unescape(encodeURIComponent(str)));
-
-const getBasicAuthString = ({ email, password }) => {
-  return "Basic " + utf8_to_b64(`${email}:${password}`);
+const authorizeApiClient = (token) => {
+  apiClient.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 };
 
-const authorizeApiClient = (basicAuth) => {
-  apiClient.defaults.headers.common["Authorization"] = basicAuth;
-};
-
-const logIn = async ({ email, password }) => {
+const logIn = async (data) => {
   const result = {
     ok: true,
   };
   try {
-    const basicAuth = getBasicAuthString({ email, password });
-    const response = await apiClient.get(ROUTES.authRoute, {
-      headers: { Authorization: basicAuth },
-    });
+    const response = await apiClient.post(ROUTES.authRoute, data);
     result.data = response.data;
-    authorizeApiClient(basicAuth);
+    authorizeApiClient(response.data.token);
   } catch (error) {
     result.ok = false;
     result.error = error.response.data;
@@ -64,7 +55,6 @@ const authApi = {
   logIn,
   logOut,
   registration,
-  getBasicAuthString,
   authorizeApiClient,
   getUsersList,
 };

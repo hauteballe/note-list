@@ -3,6 +3,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useSnackbar } from "notistack";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import jwt_decode from "jwt-decode";
 
 import { ROUTES } from "config/constants";
 import authApi from "api/auth";
@@ -21,8 +22,10 @@ const SignInContainer = () => {
     if (response.ok) {
       dispatch(
         actions.login({
-          ...response.data,
-          basicAuth: authApi.getBasicAuthString({ ...values }),
+          token: response.data.token,
+          decodedToken: jwt_decode(response.data.token),
+          refreshToken: response.data.refreshToken,
+          ...response.data.user,
         })
       );
       history.push(ROUTES.myNotes);

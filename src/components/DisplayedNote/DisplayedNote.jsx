@@ -1,3 +1,4 @@
+import React from "react";
 import { Grid, IconButton, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
@@ -19,7 +20,7 @@ const DisplayedNote = ({
   setDialogOpen,
   shareNotes,
 }) => (
-  <Wrapper>
+  <Wrapper data-testid="displayed-note-container">
     <StyledBox>
       <Box px="10px">
         <InnerWrapper>

@@ -1,3 +1,4 @@
+import React from "react";
 import {
   AppBar,
   Button,
@@ -13,7 +14,7 @@ import { ROUTES } from "config/constants";
 import { HeaderLink, StyledLink, TabLink } from "./styled";
 
 const Header = ({ props, user, onClick }) => (
-  <AppBar position="static" {...props}>
+  <AppBar position="static" {...props} data-testid="header-appbar">
     <Toolbar>
       <Grid container justifyContent="space-between">
         <Grid item>

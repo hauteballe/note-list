@@ -1,3 +1,4 @@
+import React from "react";
 import { Grid } from "@mui/material";
 import PropTypes from "prop-types";
 
@@ -12,7 +13,7 @@ import {
 } from "./styled";
 
 const EditNote = ({ onSubmit, note, onEditModeCancel }) => (
-  <Wrapper>
+  <Wrapper data-testid="edit-note-container">
     <StyledBox>
       <InnerWrapper>
         <Grid item xs={12}>
