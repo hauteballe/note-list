@@ -1,42 +1,60 @@
+import React from "react";
+import {
+  AppBar,
+  Button,
+  Grid,
+  IconButton,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import { ExitToApp } from "@mui/icons-material";
-import { AppBar, IconButton, Button } from "@mui/material";
 
 import { ROUTES } from "config/constants";
 
-import {
-  HeaderBox,
-  HeaderToolbar,
-  HeaderLink,
-  ButtonsBox,
-  HeaderLogo,
-} from "./styled";
+import { HeaderLink, StyledLink, TabLink } from "./styled";
 
-const Header = () => (
-  <HeaderBox>
-    <AppBar position="static">
-      <HeaderToolbar>
-        <HeaderLink to={ROUTES.myNotes}>
-          <HeaderLogo variant="h5" component="span">
+const Header = ({ props, user, onClick }) => (
+  <AppBar position="static" {...props} data-testid="header-appbar">
+    <Toolbar>
+      <Grid container justifyContent="space-between">
+        <Grid item>
+          <Typography variant="h5" component={StyledLink} to={ROUTES.myNotes}>
             Notes app
-          </HeaderLogo>
-        </HeaderLink>
-        <ButtonsBox>
-          <HeaderLink to={ROUTES.myNotes}>
-            <Button variant="text">MY NOTES</Button>
-          </HeaderLink>
-          <HeaderLink to={ROUTES.sharedNotes}>
-            <Button variant="text">SHARED NOTES</Button>
-          </HeaderLink>
-          <HeaderLink to={ROUTES.about}>
-            <Button variant="text">ABOUT</Button>
-          </HeaderLink>
-          <IconButton color="inherit">
-            <ExitToApp />
-          </IconButton>
-        </ButtonsBox>
-      </HeaderToolbar>
-    </AppBar>
-  </HeaderBox>
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Grid container alignItems="center" spacing={2}>
+            <Grid item>
+              <Typography component={TabLink} to={ROUTES.myNotes}>
+                MY NOTES
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography component={TabLink} to={ROUTES.sharedNotes}>
+                SHARED NOTES
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography component={TabLink} to={ROUTES.about}>
+                ABOUT
+              </Typography>
+            </Grid>
+            <Grid item>
+              {user.email ? (
+                <IconButton color="inherit" onClick={onClick}>
+                  <ExitToApp />
+                </IconButton>
+              ) : (
+                <HeaderLink to={ROUTES.signIn}>
+                  <Button variant="text">Sign In</Button>
+                </HeaderLink>
+              )}
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Toolbar>
+  </AppBar>
 );
 
 export default Header;

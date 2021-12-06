@@ -1,14 +1,11 @@
+import { Grid } from "@mui/material";
+import { Box } from "@mui/system";
 import styled from "styled-components";
-import Box from "@mui/material/Box";
-import { Typography } from "@mui/material";
 
-export const StyledBox = styled(Box)({
-  color: "#0288d1",
-  backgroundColor: "#424242",
+export const StyledGrid = styled(Grid)({
   height: "100vh",
-  overflowY: "scroll",
 });
 
-export const NotFoundText = styled(Typography)({
-  textAlign: "center",
+export const StyledBox = styled(Box)({
+  height: "500px",
 });
